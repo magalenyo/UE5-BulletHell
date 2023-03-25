@@ -129,14 +129,20 @@ void AShooterCharacter::Shoot()
 
 void AShooterCharacter::StartSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed *= sprintMultiplier;
-	GetCharacterMovement()->JumpZVelocity *= jumpMultiplier;
-	isSprinting = true;
+	if (!GetCharacterMovement()->IsFalling()) {
+		GetCharacterMovement()->MaxWalkSpeed *= sprintMultiplier;
+		GetCharacterMovement()->JumpZVelocity *= jumpMultiplier;
+		isSprinting = true;
+	}
+
 }
 
 void AShooterCharacter::StopSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed /= sprintMultiplier;
-	GetCharacterMovement()->JumpZVelocity /= jumpMultiplier;
-	isSprinting = false;
+	if (isSprinting) {
+		GetCharacterMovement()->MaxWalkSpeed /= sprintMultiplier;
+		GetCharacterMovement()->JumpZVelocity /= jumpMultiplier;
+		isSprinting = false;
+	}
+
 }
