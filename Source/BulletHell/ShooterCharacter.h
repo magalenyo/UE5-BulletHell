@@ -62,6 +62,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	float health;
+
+	UPROPERTY(EditAnywhere, Category="Sprint")
+	float sprintMultiplier = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category="Sprint")
+	float jumpMultiplier = 1.5f;
 	
 
 	void MoveForward(float AxisValue);	// No additional methods needed for controller input since it already is suported for both (it takes a rate instead of a value)
@@ -71,5 +77,8 @@ private:
 	void LookRight(float AxisValue);
 	void LookRightRate(float AxisValue);
 	void JumpUp();
+	void StartSprint();
+	void StopSprint();
 
+	bool isSprinting = false;
 };

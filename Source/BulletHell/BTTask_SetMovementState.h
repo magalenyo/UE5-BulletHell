@@ -4,26 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_FindRandomLocation.generated.h"
+#include "BTTask_SetMovementState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BULLETHELL_API UBTTask_FindRandomLocation : public UBTTask_BlackboardBase
+class BULLETHELL_API UBTTask_SetMovementState : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-
+	
 public:
-	UBTTask_FindRandomLocation();
+	UBTTask_SetMovementState();
 	
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
 private:
-	UPROPERTY(EditAnywhere)
-	float radius = 4.0f;
 
 	UPROPERTY(EditAnywhere)
-	FVector offset = FVector::ZeroVector;
+	TEnumAsByte<EMovementMode> movementMode;
 };

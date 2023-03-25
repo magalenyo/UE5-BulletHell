@@ -5,6 +5,8 @@
 #include "Gun.h"
 #include "Components/CapsuleComponent.h"
 #include "BulletHellGameModeBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -48,6 +50,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &AShooterCharacter::JumpUp);
 	PlayerInputComponent->BindAction(TEXT("Shoot"), IE_Pressed, this, &AShooterCharacter::Shoot);
+    PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AShooterCharacter::StartSprint);
+    PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AShooterCharacter::StopSprint);
 
 }
 
@@ -117,6 +121,22 @@ void AShooterCharacter::JumpUp()
 
 void AShooterCharacter::Shoot()
 {
+	if (isSprinting) {
+		return;
+	}
 	gun->PullTrigger();
 }
 
+void AShooterCharacter::StartSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed *= sprintMultiplier;
+	GetCharacterMovement()->JumpZVelocity *= jumpMultiplier;
+	isSprinting = true;
+}
+
+void AShooterCharacter::StopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed /= sprintMultiplier;
+	GetCharacterMovement()->JumpZVelocity /= jumpMultiplier;
+	isSprinting = false;
+}

@@ -29,7 +29,7 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
         return EBTNodeResult::Failed;
     }
 
-    blackboard->SetValueAsVector(GetSelectedBlackboardKey(), randomLocation);
+    blackboard->SetValueAsVector(GetSelectedBlackboardKey(), randomLocation + offset);
 
     return EBTNodeResult::Succeeded;
 }
