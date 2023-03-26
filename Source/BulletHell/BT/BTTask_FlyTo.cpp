@@ -46,7 +46,6 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
 
         FRotator currentRotation = pawn->GetActorRotation();
         FRotator newRotation = FRotator::MakeFromEuler(FVector(currentRotation.Pitch, currentRotation.Roll, directionToPosition.Rotation().Yaw));
-        // FRotator finalRotation = FRotator(currentRotation.Pitch, currentRotation.Roll, newRotation.Yaw);
         pawn->SetActorRotation(newRotation);
 
         characterMovementComponent->SetMovementMode(MOVE_Flying);
