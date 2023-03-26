@@ -42,3 +42,8 @@ bool AShooterAIController::IsDead() const
 
     return false;
 }
+
+const float AShooterAIController::GetFlyOffset()
+{
+    return flyOffset;
+}
