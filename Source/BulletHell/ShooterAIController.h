@@ -21,15 +21,18 @@ public:
 	const float GetFlyOffset();
 	
 protected:
+	UPROPERTY(EditAnywhere)
+	class UBehaviorTree* AIBehavior;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> projectileClass;
+
+	APawn* playerPawn;
+
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditAnywhere)
 	float flyOffset = 500;
-
-	UPROPERTY(EditAnywhere)
-	class UBehaviorTree* AIBehavior;
-
-	APawn* playerPawn;
 
 };

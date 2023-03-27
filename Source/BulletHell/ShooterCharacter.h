@@ -38,7 +38,15 @@ public:
 	UFUNCTION(BlueprintPure)		// It does blueprint callable + other stuff. A pure nonde is a node that doesn't have an execution pin, it only has a result
 	float GetHealthPercent() const;
 
+	// COMPONENTS GETTERS
+	const USceneComponent* GetProjectileSpawnPoint() const;
+
 private:
+	// COMPONENTS
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* projectileSpawnPoint;
+
+	// PROPERTIES
 	UPROPERTY(EditAnywhere)
 	float rotationRate = 40;
 

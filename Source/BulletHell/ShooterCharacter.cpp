@@ -14,6 +14,8 @@ AShooterCharacter::AShooterCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+    projectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn point"));
+	projectileSpawnPoint->SetupAttachment(GetMesh());
 }
 
 // Called when the game starts or when spawned
@@ -82,6 +84,11 @@ bool AShooterCharacter::IsDead() const
 float AShooterCharacter::GetHealthPercent() const
 {
 	return health / maxHealth;
+}
+
+const USceneComponent* AShooterCharacter::GetProjectileSpawnPoint() const
+{
+	return projectileSpawnPoint;
 }
 
 void AShooterCharacter::MoveForward(float AxisValue)

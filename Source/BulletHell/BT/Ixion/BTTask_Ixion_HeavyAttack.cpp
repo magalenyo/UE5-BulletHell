@@ -11,5 +11,5 @@ UBTTask_Ixion_HeavyAttack::UBTTask_Ixion_HeavyAttack()
 
 EBTNodeResult::Type UBTTask_Ixion_HeavyAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    return EBTNodeREsult::Succeded;
+    return EBTNodeResult::Succeeded;
 }

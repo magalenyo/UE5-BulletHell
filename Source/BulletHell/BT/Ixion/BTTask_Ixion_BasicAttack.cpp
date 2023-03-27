@@ -2,6 +2,7 @@
 
 
 #include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
+#include "IxionAIController.h"
 
 
 UBTTask_Ixion_BasicAttack::UBTTask_Ixion_BasicAttack()
@@ -11,5 +12,13 @@ UBTTask_Ixion_BasicAttack::UBTTask_Ixion_BasicAttack()
 
 EBTNodeResult::Type UBTTask_Ixion_BasicAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    return EBTNodeResult::Succeeded;
+    AIxionAIController* character = Cast<AIxionAIController>(OwnerComp.GetAIOwner());
+
+    if (!character) {
+        EBTNodeResult::Failed;
+    }
+
+    character->BasicAttack();
+
+    return EBTNodeResult::Succeeded;;
 }
