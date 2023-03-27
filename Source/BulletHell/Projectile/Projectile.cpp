@@ -22,7 +22,8 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	SetLifeSpan(lifeSpan);	
 }
 
 // Called every frame

@@ -32,4 +32,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float damage = 50.f;
+
+	UPROPERTY(EditAnywhere)
+	float lifeSpan = 5.0f;
 };
