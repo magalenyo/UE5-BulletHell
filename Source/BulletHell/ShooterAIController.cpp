@@ -35,6 +35,11 @@ const FRotator AShooterAIController::LookAt(const FVector target) const
 	return UKismetMathLibrary::FindLookAtRotation(GetPawn()->GetActorLocation(), target);
 }
 
+const FRotator AShooterAIController::LookAt(const FVector source, const FVector target) const
+{
+    return UKismetMathLibrary::FindLookAtRotation(source, target);
+}
+
 void AShooterAIController::LookAtPlayer()
 {
     if (!playerPawn) {

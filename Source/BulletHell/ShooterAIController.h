@@ -34,6 +34,7 @@ protected:
 	const USceneComponent* GetProjectileSpawnPoint() const;
 
 	const FRotator LookAt(const FVector target) const;
+	const FRotator LookAt(const FVector source, const FVector target) const;
 
 	void LookAtPlayer();
 

@@ -5,6 +5,7 @@
 #include "Projectile/Projectile.h"
 #include "ShooterCharacter.h"
 #include "TimerManager.h"
+#include "Math/UnrealMathUtility.h"
 #include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
 
 
@@ -19,7 +20,8 @@ void AIxionAIController::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
     if (isAttacking) {
-        BasicAttack();
+        LookAtPlayer();
+        // BasicAttack();
     }
 }
 
@@ -27,7 +29,7 @@ void AIxionAIController::StartBasicAttack()
 {
     isAttacking = true;
 
-    GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, 1.0, true);
+    GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, .05, true);
 }
 
 void AIxionAIController::BasicAttack()
@@ -49,13 +51,23 @@ void AIxionAIController::BasicAttack()
     FVector location = projectileSpawnPoint->GetComponentLocation();
 	FRotator rotation = projectileSpawnPoint->GetComponentRotation();
 
-	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(projectileClass, location, GetPawn()->GetActorRotation());
+    float randomX = FMath::RandRange(-radiusOffset, radiusOffset);
+    float randomY = FMath::RandRange(-radiusOffset, radiusOffset);
+    FRotator randomRotation = LookAt(location, playerPawn->GetActorLocation() + FVector(randomX, randomY, -heightOffset));
+
+	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(projectileClass, location, randomRotation);
 	projectile->SetOwner(this);
+
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-    toDelete++;
-    if (toDelete == 30){
+
+    currentBulletsBasicAttack++;
+    if (currentBulletsBasicAttack == bulletsBasicAttack){
         isAttacking = false;
         onBasicAttackFinishedDelegate.ExecuteIfBound();
-        toDelete = 0;
+        currentBulletsBasicAttack = 0;
+    }
+    else{
+        float nextTime = FMath::RandRange(.05f, .15f);
+        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, nextTime, true);
     }
 }

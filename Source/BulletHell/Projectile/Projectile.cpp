@@ -3,6 +3,8 @@
 
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AProjectile::AProjectile()
@@ -14,14 +16,16 @@ AProjectile::AProjectile()
 	RootComponent = mesh;
 
 	projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
-	projectileMovementComponent->MaxSpeed = 1300.f;
-	projectileMovementComponent->InitialSpeed = 1300.f;
+	projectileMovementComponent->MaxSpeed = speed;
+	projectileMovementComponent->InitialSpeed = speed;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	mesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
 	SetLifeSpan(lifeSpan);	
 }
@@ -31,5 +35,19 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (hitParticles) {
+		UGameplayStatics::SpawnEmitterAtLocation(
+			this,
+			hitParticles,
+			GetActorLocation(),
+			GetActorRotation()
+		);
+	}
+
+	Destroy();
 }
 

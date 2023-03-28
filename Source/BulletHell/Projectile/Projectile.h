@@ -35,4 +35,14 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float lifeSpan = 5.0f;
+
+	UPROPERTY(EditAnywhere)
+	float speed = 2500.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class UParticleSystem* hitParticles;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 };

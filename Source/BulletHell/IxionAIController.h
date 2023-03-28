@@ -33,10 +33,16 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	int bulletsBasicAttack = 30;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float heightOffset = 50.0f;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	float radiusOffset = 120.0f;
 	
 	bool isAttacking = false;
 
 	FTimerHandle fireRateTimerHandle;
 
-	int toDelete = 0;
+	int currentBulletsBasicAttack = 0;
 };
