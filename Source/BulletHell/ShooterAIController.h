@@ -31,6 +31,12 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	const USceneComponent* GetProjectileSpawnPoint() const;
+
+	const FRotator LookAt(const FVector target) const;
+
+	void LookAtPlayer();
+
 private:
 	UPROPERTY(EditAnywhere)
 	float flyOffset = 500;

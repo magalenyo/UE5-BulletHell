@@ -4,6 +4,8 @@
 #include "IxionAIController.h"
 #include "Projectile/Projectile.h"
 #include "ShooterCharacter.h"
+#include "TimerManager.h"
+#include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
 
 
 void AIxionAIController::BeginPlay()
@@ -15,10 +17,23 @@ void AIxionAIController::BeginPlay()
 void AIxionAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (isAttacking) {
+        BasicAttack();
+    }
+}
+
+void AIxionAIController::StartBasicAttack()
+{
+    isAttacking = true;
+
+    GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, 1.0, true);
 }
 
 void AIxionAIController::BasicAttack()
 {
+    LookAtPlayer();
+
     AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
 
     if (!character) {
@@ -34,6 +49,13 @@ void AIxionAIController::BasicAttack()
     FVector location = projectileSpawnPoint->GetComponentLocation();
 	FRotator rotation = projectileSpawnPoint->GetComponentRotation();
 
-	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(projectileClass, location, rotation);
+	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(projectileClass, location, GetPawn()->GetActorRotation());
 	projectile->SetOwner(this);
+    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+    toDelete++;
+    if (toDelete == 30){
+        isAttacking = false;
+        onBasicAttackFinishedDelegate.ExecuteIfBound();
+        toDelete = 0;
+    }
 }

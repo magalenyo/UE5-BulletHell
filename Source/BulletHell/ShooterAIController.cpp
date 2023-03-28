@@ -3,6 +3,7 @@
 
 #include "ShooterAIController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "ShooterCharacter.h"
 
@@ -16,6 +17,31 @@ void AShooterAIController::BeginPlay()
         RunBehaviorTree(AIBehavior);
         GetBlackboardComponent()->SetValueAsVector(TEXT("StartLocation"), GetPawn()->GetActorLocation());
     }
+}
+
+const USceneComponent* AShooterAIController::GetProjectileSpawnPoint() const
+{
+    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
+
+    if (!character) {
+        return nullptr;
+    }
+
+    return character->GetProjectileSpawnPoint();
+}
+
+const FRotator AShooterAIController::LookAt(const FVector target) const
+{
+	return UKismetMathLibrary::FindLookAtRotation(GetPawn()->GetActorLocation(), target);
+}
+
+void AShooterAIController::LookAtPlayer()
+{
+    if (!playerPawn) {
+        return;
+    }
+
+    GetPawn()->SetActorRotation(LookAt(playerPawn->GetActorLocation()));
 }
 
 void AShooterAIController::Tick(float DeltaSeconds)
