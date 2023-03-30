@@ -35,14 +35,21 @@ private:
 	int bulletsBasicAttack = 30;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
-	float heightOffset = 50.0f;
+	float heightOffset = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
-	float radiusOffset = 120.0f;
+	float radiusOffset = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+	bool usePredicted = false;
 	
 	bool isAttacking = false;
 
 	FTimerHandle fireRateTimerHandle;
 
 	int currentBulletsBasicAttack = 0;
+
+	const FVector GetPredictedDestination() const;
+
+	
 };

@@ -91,6 +91,11 @@ const USceneComponent* AShooterCharacter::GetProjectileSpawnPoint() const
 	return projectileSpawnPoint;
 }
 
+const float AShooterCharacter::GetMovementSpeed() const
+{
+	return GetCharacterMovement()->Velocity.Size();
+}
+
 void AShooterCharacter::MoveForward(float AxisValue)
 {
 	AddMovementInput(GetActorForwardVector() * AxisValue * movementSpeed * GetWorld()->GetDeltaSeconds());

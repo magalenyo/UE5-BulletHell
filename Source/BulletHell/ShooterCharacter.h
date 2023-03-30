@@ -41,6 +41,8 @@ public:
 	// COMPONENTS GETTERS
 	const USceneComponent* GetProjectileSpawnPoint() const;
 
+	const float GetMovementSpeed() const;
+
 private:
 	// COMPONENTS
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

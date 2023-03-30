@@ -37,6 +37,105 @@ void AProjectile::Tick(float DeltaTime)
 
 }
 
+const float AProjectile::GetProjectileSpeed() const
+{
+	return speed;
+}
+
+// void AProjectile::SetPredictionSpeed(FVector targetLocation)
+// {
+// 	if (!projectileMovementComponent)
+//     {
+//         return;
+//     }
+
+
+//     FVector startLocation = GetActorLocation();
+//     FVector LaunchVelocity;
+
+//     float distance = (targetLocation - startLocation).Size();
+//     float timeToTarget = distance / speed;
+//     FVector velocityToTarget = timeToTarget * projectileMovementComponent->Velocity;
+//     FVector endLocation = startLocation + velocityToTarget;
+//     UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
+//     UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
+//     // The gravity scale of the world
+//     // float GravityScale = GetWorld()->GetGravityZ() / -980.0f;
+
+//     // Calculate the launch velocity
+//     bool bHasValidSolution = UGameplayStatics::SuggestProjectileVelocity(
+//         this,
+//         LaunchVelocity,
+//         startLocation,
+//         endLocation,
+//         speed,
+//         false,
+//         0.0f,
+//         0.0f,
+//         ESuggestProjVelocityTraceOption::TraceFullPath,
+//         FCollisionResponseParams::DefaultResponseParam,
+//         TArray<AActor*>(),
+//         true
+//     );
+
+//     if (bHasValidSolution)
+//     {
+//         // Set the velocity and activate the projectile movement component
+//         // projectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
+// 		// projectileMovementComponent->Velocity = LaunchVelocity;
+// 		// projectileMovementComponent->bRotationFollowsVelocity = true;
+//         // projectileMovementComponent->Activate();
+//         projectileMovementComponent->Velocity = LaunchVelocity;
+//     }
+// }
+
+void AProjectile::SetPredictionSpeed(FVector targetLocation)
+{
+	if (!projectileMovementComponent)
+    {
+        return;
+    }
+
+    FVector startLocation = GetActorLocation();
+    FVector LaunchVelocity;
+    
+    float distance = FVector::Distance(startLocation, targetLocation);
+    float timeToTarget = distance / speed;
+    FVector velocityToTarget = projectileMovementComponent->Velocity * timeToTarget;
+    FVector endLocation = startLocation + velocityToTarget;
+    UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
+    UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
+    // The gravity scale of the world
+    // float GravityScale = GetWorld()->GetGravityZ() / -980.0f;
+
+    // Calculate the launch velocity
+    bool bHasValidSolution = UGameplayStatics::SuggestProjectileVelocity(
+        this,
+        LaunchVelocity,
+        startLocation,
+        endLocation,
+        speed,
+        false,
+        0.0f,
+        0.0f,
+        ESuggestProjVelocityTraceOption::TraceFullPath,
+        FCollisionResponseParams::DefaultResponseParam,
+        TArray<AActor*>(),
+        true
+    );
+
+    if (bHasValidSolution)
+    {
+        // Set the velocity and activate the projectile movement component
+        // projectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
+		// projectileMovementComponent->Velocity = LaunchVelocity;
+		projectileMovementComponent->bRotationFollowsVelocity = true;
+        projectileMovementComponent->Velocity = LaunchVelocity;
+                projectileMovementComponent->Activate();
+
+    }
+}
+
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (hitParticles) {

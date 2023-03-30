@@ -23,6 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	const float GetProjectileSpeed() const;
+
+	void SetPredictionSpeed(FVector targetLocation);
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UStaticMeshComponent* mesh;
