@@ -30,12 +30,10 @@ protected:
     UPROPERTY(EditAnywhere)
     float acceptanceRadius = 40;
 
-    UPROPERTY(EditAnywhere)
-    float flightHeight = 500;
-
 private:
     float initialBrakingDeceleration = 0;
     float maxBrakingDeceleration = 2000;
+    float initialSpeed;
     UCharacterMovementComponent* characterMovementComponent;
 
     FVector GetDestination(const UBehaviorTreeComponent& OwnerComp) const;

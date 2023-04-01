@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "IxionAIController.h"
 #include "BTTask_Ixion_BasicAttack.generated.h"
 
 /**
@@ -24,4 +25,7 @@ protected:
 
 private:
 	bool isAttacking = false;
+
+	UPROPERTY(EditAnywhere)
+	EIxionBasicAttack attack;
 };

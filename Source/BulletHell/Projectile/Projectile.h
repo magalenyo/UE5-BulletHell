@@ -26,27 +26,43 @@ public:
 	const float GetProjectileSpeed() const;
 
 	void SetPredictionSpeed(FVector targetLocation);
+	void SetSpeed(float newSpeed);
+	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 
 private:
+
+	// PARAMETERS
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float damage = 50.f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float lifeSpan = 5.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float speed = 2500.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class UParticleSystem* hitParticles;
+	
+	// COMPONENTS
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UStaticMeshComponent* mesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	class UProjectileMovementComponent* projectileMovementComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	float damage = 50.f;
+	// ATTRIBUTES
+	float initialDecelerationSpeed = -1.0f;
 
-	UPROPERTY(EditAnywhere)
-	float lifeSpan = 5.0f;
+	bool useDeceleration = false;
 
-	UPROPERTY(EditAnywhere)
-	float speed = 2500.0f;
+	class UTimelineComponent* decelerationTimeline;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	class UParticleSystem* hitParticles;
-
+	// FUNCTIONS
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	void OnDecelerationTimelineUpdate(float Alpha);
 
 };

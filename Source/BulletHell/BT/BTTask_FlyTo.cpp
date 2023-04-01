@@ -26,6 +26,8 @@ EBTNodeResult::Type UBTTask_FlyTo::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 
     initialBrakingDeceleration = characterMovementComponent->BrakingDecelerationFlying;
     characterMovementComponent->BrakingDecelerationFlying = maxBrakingDeceleration;
+    initialSpeed = characterMovementComponent->MaxFlySpeed;
+    characterMovementComponent->MaxFlySpeed = speed;
 
     return EBTNodeResult::InProgress;
 }
@@ -55,6 +57,7 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
         if (distanceToPosition <= acceptanceRadius)
         {
             characterMovementComponent->BrakingDecelerationFlying = initialBrakingDeceleration;
+            characterMovementComponent->MaxFlySpeed = initialSpeed;
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     }

@@ -27,7 +27,6 @@ EBTNodeResult::Type UBTTask_FindInitLocation::ExecuteTask(UBehaviorTreeComponent
     
     FVector parentLocation = controller->GetPawn()->GetActorLocation();
     FVector targetLocation = FVector(parentLocation.X, parentLocation.Y, parentLocation.Z + controller->GetFlyOffset());
-    UE_LOG(LogTemp, Display, TEXT("Your message %s"), *targetLocation.ToString());
     blackboard->SetValueAsVector(GetSelectedBlackboardKey(), targetLocation);
 
     return EBTNodeResult::Succeeded;

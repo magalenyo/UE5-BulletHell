@@ -39,20 +39,74 @@ void AIxionAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (isAttacking) {
+    if (isAttacking && mustLookAtPlayer) {
         LookAtPlayer();
-        // BasicAttack();
     }
 }
 
-void AIxionAIController::StartBasicAttack()
+void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
 {
     isAttacking = true;
 
-    GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, .05, true);
+    switch(attack) {
+        case EIxionBasicAttack::EXIT_ATTACK:
+            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAExit, .05, true);
+        break;
+        case EIxionBasicAttack::MACHINE_GUN:
+            mustLookAtPlayer = true;
+            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, .05, true);
+        break;
+        default:
+            BADefault();
+        break;
+    }
 }
 
-void AIxionAIController::BasicAttack()
+void AIxionAIController::BADefault()
+{
+    UE_LOG(LogTemp, Display, TEXT("AIxionAIController::StartBasicAttack: Invalid attack"));
+    isAttacking = false;
+    onBasicAttackFinishedDelegate.ExecuteIfBound();
+}
+
+void AIxionAIController::BAExit()
+{
+    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
+
+    if (!character) {
+        return;
+    }
+
+    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
+
+    if (!projectileSpawnPoint) {
+        return;
+    }
+
+    FVector location = projectileSpawnPoint->GetComponentLocation();
+	FRotator rotation = projectileSpawnPoint->GetComponentRotation();
+
+    for (int i = 0; i < bulletsExitAttack; ++i) {
+        FVector randomPosition = FMath::VRand() * 500 + location;
+        FTransform transform = FTransform(LookAt(randomPosition), location);
+        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
+        if (projectile)
+        {
+            UGameplayStatics::FinishSpawningActor(projectile, transform);
+            projectile->SetOwner(this);
+            projectile->SetLifeSpan(lifeSpanExitAttack);
+            projectile->SetSpeed(speedExitAttack);
+            if (useDecelerationCurveExitAttack && decelerationCurveExitAttack) {
+                projectile->SetDecelerationCurve(decelerationCurveExitAttack);
+            }
+        }
+    }
+
+    FinishAttack();
+    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+}
+
+void AIxionAIController::BAMachineGun()
 {
     LookAtPlayer();
 
@@ -98,12 +152,19 @@ void AIxionAIController::BasicAttack()
 
     currentBulletsBasicAttack++;
     if (currentBulletsBasicAttack == bulletsBasicAttack){
-        isAttacking = false;
-        onBasicAttackFinishedDelegate.ExecuteIfBound();
-        currentBulletsBasicAttack = 0;
+        FinishAttack();
     }
     else{
         float nextTime = FMath::RandRange(.05f, .15f);
-        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BasicAttack, nextTime, true);
+        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, nextTime, true);
     }
+}
+
+void AIxionAIController::FinishAttack() 
+{
+    isAttacking = false;
+    mustLookAtPlayer = false;
+    currentBulletsBasicAttack = 0;
+    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+    onBasicAttackFinishedDelegate.ExecuteIfBound();
 }

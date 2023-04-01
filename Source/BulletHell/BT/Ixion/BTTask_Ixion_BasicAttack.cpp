@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTTask_Ixion_BasicAttack::ExecuteTask(UBehaviorTreeComponen
     }
 
     isAttacking = true;
-    character->StartBasicAttack();
+    character->StartBasicAttack(attack);
     character->onBasicAttackFinishedDelegate.BindLambda([&]()
     {
         isAttacking = false;

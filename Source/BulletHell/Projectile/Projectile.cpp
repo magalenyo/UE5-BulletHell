@@ -4,12 +4,11 @@
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/TimelineComponent.h"
 
 
-// Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
@@ -20,74 +19,25 @@ AProjectile::AProjectile()
 	projectileMovementComponent->InitialSpeed = speed;
 }
 
-// Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
 	mesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 
-	SetLifeSpan(lifeSpan);	
+	SetLifeSpan(lifeSpan);
 }
 
-// Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+    
 }
 
 const float AProjectile::GetProjectileSpeed() const
 {
 	return speed;
 }
-
-// void AProjectile::SetPredictionSpeed(FVector targetLocation)
-// {
-// 	if (!projectileMovementComponent)
-//     {
-//         return;
-//     }
-
-
-//     FVector startLocation = GetActorLocation();
-//     FVector LaunchVelocity;
-
-//     float distance = (targetLocation - startLocation).Size();
-//     float timeToTarget = distance / speed;
-//     FVector velocityToTarget = timeToTarget * projectileMovementComponent->Velocity;
-//     FVector endLocation = startLocation + velocityToTarget;
-//     UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
-//     UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
-//     // The gravity scale of the world
-//     // float GravityScale = GetWorld()->GetGravityZ() / -980.0f;
-
-//     // Calculate the launch velocity
-//     bool bHasValidSolution = UGameplayStatics::SuggestProjectileVelocity(
-//         this,
-//         LaunchVelocity,
-//         startLocation,
-//         endLocation,
-//         speed,
-//         false,
-//         0.0f,
-//         0.0f,
-//         ESuggestProjVelocityTraceOption::TraceFullPath,
-//         FCollisionResponseParams::DefaultResponseParam,
-//         TArray<AActor*>(),
-//         true
-//     );
-
-//     if (bHasValidSolution)
-//     {
-//         // Set the velocity and activate the projectile movement component
-//         // projectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
-// 		// projectileMovementComponent->Velocity = LaunchVelocity;
-// 		// projectileMovementComponent->bRotationFollowsVelocity = true;
-//         // projectileMovementComponent->Activate();
-//         projectileMovementComponent->Velocity = LaunchVelocity;
-//     }
-// }
 
 void AProjectile::SetPredictionSpeed(FVector targetLocation)
 {
@@ -103,8 +53,8 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation)
     float timeToTarget = distance / speed;
     FVector velocityToTarget = projectileMovementComponent->Velocity * timeToTarget;
     FVector endLocation = startLocation + velocityToTarget;
-    UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
-    UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
+    // UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
+    // UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
     // The gravity scale of the world
     // float GravityScale = GetWorld()->GetGravityZ() / -980.0f;
 
@@ -131,9 +81,41 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation)
 		// projectileMovementComponent->Velocity = LaunchVelocity;
 		projectileMovementComponent->bRotationFollowsVelocity = true;
         projectileMovementComponent->Velocity = LaunchVelocity;
-                projectileMovementComponent->Activate();
-
+        projectileMovementComponent->Activate();
     }
+}
+
+void AProjectile::SetSpeed(float newSpeed)
+{
+    speed = newSpeed;
+    projectileMovementComponent->MaxSpeed = speed;
+	projectileMovementComponent->InitialSpeed = speed;
+}
+
+void AProjectile::SetDecelerationCurve(UCurveFloat* decelerationCurve)
+{
+    useDeceleration = true;
+    initialDecelerationSpeed = speed;
+
+    if (!decelerationCurve) {
+        return;
+    }
+    decelerationTimeline = NewObject<UTimelineComponent>(this, UTimelineComponent::StaticClass());
+
+    FOnTimelineFloat progressUpdate;
+    progressUpdate.BindUFunction(this, FName("OnDecelerationTimelineUpdate"));
+    decelerationTimeline->AddInterpFloat(decelerationCurve, progressUpdate);
+
+    float newLength = lifeSpan;
+    float curveLength = decelerationCurve->FloatCurve.GetLastKey().Time;    // Get the length of the curve
+    float playRate = curveLength / newLength;                               // Calculate the playback rate to scale the curve
+    decelerationTimeline->SetTimelineLength(newLength);
+    decelerationTimeline->SetPlayRate(playRate);
+
+    decelerationTimeline->RegisterComponent();
+    decelerationTimeline->Play();
+    PrimaryActorTick.bCanEverTick = true;
+    UE_LOG(LogTemp, Display, TEXT("decelerationTimeline %s"), &decelerationTimeline);
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -148,5 +130,11 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	}
 
 	Destroy();
+}
+
+void AProjectile::OnDecelerationTimelineUpdate(float Alpha)
+{
+    SetSpeed(initialDecelerationSpeed * Alpha);
+    UE_LOG(LogTemp, Display, TEXT("Progress: %f , NEW SPEED: %f"), Alpha, speed);
 }
 
