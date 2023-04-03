@@ -15,7 +15,15 @@ enum class EIxionBasicAttack : uint8
 	COUNT
 };
 
+UENUM(BlueprintType)
+enum class EIxionHeavyAttack : uint8
+{
+	VORTEX UMETA(DisplayName = "Vortex"),
+	COUNT
+};
+
 DECLARE_DELEGATE(FOnBasicAttackFinishedSignature);
+DECLARE_DELEGATE(FOnHeavyAttackFinishedSignature);
 
 /**
  * 
@@ -30,17 +38,24 @@ public:
 
 	// BASIC ATTACKS
 	void StartBasicAttack(const EIxionBasicAttack attack);
-	void BADefault();
+	void StartHeavyAttack(const EIxionHeavyAttack attack);
+	void AttackDefault();
 	void BAExit();
 	void BAMachineGun();
+	void HAVortex();
 
 	FOnBasicAttackFinishedSignature onBasicAttackFinishedDelegate;
+	FOnHeavyAttackFinishedSignature onHeavyAttackFinishedDelegate;
 	
 protected:
 
 	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY(EditAnywhere, Category="Combat")
+	bool usePredicted = false;
+
+	// BA: Machine Gun
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
 	int bulletsBasicAttack = 30;
 
@@ -50,9 +65,7 @@ private:
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
 	float radiusOffset = 100.0f;
 
-	UPROPERTY(EditAnywhere)
-	bool usePredicted = false;
-
+	// BA: Exit Attack
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
 	int bulletsExitAttack = 30;
 
@@ -67,7 +80,24 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
 	UCurveFloat* decelerationCurveExitAttack;
-	
+
+	// HA: VORTEX
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
+	int startPointsPerWaveVortex = 12;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
+	int wavesPerPointVortex = 24;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	float speedVortexAttack = 800.0f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	float durationVortex = 4.0f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	float rotationSpeedVortex = 4.0f;
+
+	// ATTRIBUTES 
 	bool isAttacking = false;
 
 	bool mustLookAtPlayer = false;
@@ -76,9 +106,10 @@ private:
 
 	int currentBulletsBasicAttack = 0;
 
+	int currentWaveVortex = 0;
+
 	const FVector GetPredictedDestination() const;
 
-	void FinishAttack();
+	void FinishAttack(bool isBasicAttack = true);
 
-	
 };

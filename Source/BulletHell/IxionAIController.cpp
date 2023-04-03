@@ -34,7 +34,6 @@ const FVector AIxionAIController::GetPredictedDestination() const
     return positionToLookAt;
 }
 
-
 void AIxionAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -57,14 +56,30 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
             GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, .05, true);
         break;
         default:
-            BADefault();
+            AttackDefault();
         break;
     }
 }
 
-void AIxionAIController::BADefault()
+void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
 {
-    UE_LOG(LogTemp, Display, TEXT("AIxionAIController::StartBasicAttack: Invalid attack"));
+    isAttacking = true;
+
+    switch(attack) {
+        case EIxionHeavyAttack::VORTEX:
+            mustLookAtPlayer = true;
+            LookAtPlayer();
+            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, .05, true);
+        break;
+        default:
+            AttackDefault();
+        break;
+    }
+}
+
+void AIxionAIController::AttackDefault()
+{
+    UE_LOG(LogTemp, Display, TEXT("AIxionAIController::StartAttack: Invalid attack"));
     isAttacking = false;
     onBasicAttackFinishedDelegate.ExecuteIfBound();
 }
@@ -123,7 +138,6 @@ void AIxionAIController::BAMachineGun()
     }
 
     FVector location = projectileSpawnPoint->GetComponentLocation();
-	FRotator rotation = projectileSpawnPoint->GetComponentRotation();
 
     float randomX = FMath::RandRange(-radiusOffset, radiusOffset);
     float randomY = FMath::RandRange(-radiusOffset, radiusOffset);
@@ -160,11 +174,140 @@ void AIxionAIController::BAMachineGun()
     }
 }
 
-void AIxionAIController::FinishAttack() 
+// void AIxionAIController::HAVortex() 
+// {
+//     LookAtPlayer();
+
+//     AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
+
+//     if (!character) {
+//         return;
+//     }
+
+//     const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
+
+//     if (!projectileSpawnPoint) {
+//         return;
+//     }
+
+//     FVector location = projectileSpawnPoint->GetComponentLocation();
+//     FVector targetLocation = playerPawn->GetActorLocation();
+//     FRotator rotationTowardsPlayer = LookAt(location, targetLocation);
+
+//     float angleToRotate = 360.0 / startPointsPerWaveVortex;
+//     for (int i = 0; i < startPointsPerWaveVortex; ++i) {
+//         float extra = 360.0/((rotationSpeedVortex / wavesPerPointVortex) * currentWaveVortex);
+//         FRotator pointRotation = rotationTowardsPlayer + FRotator((angleToRotate * i) + extra, 90, 0);
+
+//         pointRotation.Pitch = FMath::Fmod(pointRotation.Pitch, 360.0f);
+//         pointRotation.Roll = FMath::Fmod(pointRotation.Roll, 360.0f);
+//         pointRotation.Yaw = FMath::Fmod(pointRotation.Yaw, 360.0f);
+        
+//         UE_LOG(LogTemp, Display, TEXT("ROTATION TOWARDS PLAYER: %s ROTATION FINAL: %s"), *rotationTowardsPlayer.ToString(), *pointRotation.ToString());
+//         FTransform transform = FTransform(pointRotation, location);
+//         AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
+//         if (projectile)
+//         {
+//             projectile->SetSpeed(speedExitAttack);
+//             UGameplayStatics::FinishSpawningActor(projectile, transform);
+
+//             projectile->SetOwner(this);
+//         }
+//     }
+
+//     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+
+//     currentWaveVortex++;
+//     if (currentWaveVortex == wavesPerPointVortex) {
+//         FinishAttack(false);
+//     }
+//     else{
+//         float nextTime = durationVortex / wavesPerPointVortex;
+//         GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, nextTime, true);
+//     }
+// }
+
+void AIxionAIController::HAVortex() 
+{
+    LookAtPlayer();
+
+    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
+
+    if (!character) {
+        return;
+    }
+
+    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
+
+    if (!projectileSpawnPoint) {
+        return;
+    }
+
+    FVector location = projectileSpawnPoint->GetComponentLocation();
+    FVector targetLocation = playerPawn->GetActorLocation();
+    FRotator rotationTowardsPlayer = LookAt(targetLocation, location);
+
+    float angleToRotate = 360.0f / startPointsPerWaveVortex;
+    float angleOffsetPerWave = rotationSpeedVortex / durationVortex;
+    float angleExtraPerWave = 360 / wavesPerPointVortex;
+    float zOffset = 0.0f;
+
+    for (int i = 0; i < startPointsPerWaveVortex; ++i) {
+        // float extra = 360.0f / ((rotationSpeedVortex / wavesPerPointVortex) * (currentWaveVortex + 1));
+        // float extra = 360.0f / ((rotationSpeedVortex / wavesPerPointVortex) * currentWaveVortex);
+        // float extra = ((rotationSpeedVortex / wavesPerPointVortex) * (currentWaveVortex + 1)) / rotationSpeedVortex * 360;
+            // float extra = 360.0f * currentWaveVortex / wavesPerPointVortex;
+        float extra = angleExtraPerWave * currentWaveVortex * angleOffsetPerWave;
+        FRotator pointRotation = rotationTowardsPlayer + FRotator((angleToRotate * i) + extra, 90, 0);
+
+        // pointRotation.Pitch = FMath::Fmod(pointRotation.Pitch, 360.0f);
+        // pointRotation.Roll = FMath::Fmod(pointRotation.Roll, 360.0f);
+        // pointRotation.Yaw = FMath::Fmod(pointRotation.Yaw, 360.0f);
+                if (i == 0) {
+            UE_LOG(LogTemp, Display, TEXT("TowardsPlayer: %s Initial rotation: %f, Extra: %f FInal: %s"), *rotationTowardsPlayer.ToString(), angleToRotate, extra, *pointRotation.ToString());
+        }
+
+        // Calculate the Z offset for the current bullet based on the wave and bullet number
+        zOffset += 50.0f / startPointsPerWaveVortex;
+        FVector offset(0.0f, 0.0f, zOffset);
+
+        // Apply the rotation and Z offset to the location
+        FVector bulletLocation = location + 0;
+        FTransform transform = FTransform(pointRotation, bulletLocation);
+
+        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
+        if (projectile)
+        {
+            projectile->SetSpeed(speedExitAttack);
+            UGameplayStatics::FinishSpawningActor(projectile, transform);
+
+            projectile->SetOwner(this);
+        }
+    }
+
+    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+
+    currentWaveVortex++;
+    if (currentWaveVortex == wavesPerPointVortex) {
+        FinishAttack(false);
+    }
+    else{
+        float nextTime = durationVortex / wavesPerPointVortex;
+        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, nextTime, true);
+    }
+}
+
+
+void AIxionAIController::FinishAttack(bool isBasicAttack) 
 {
     isAttacking = false;
     mustLookAtPlayer = false;
     currentBulletsBasicAttack = 0;
+    currentWaveVortex = 0;
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-    onBasicAttackFinishedDelegate.ExecuteIfBound();
+    if (isBasicAttack) {
+        onBasicAttackFinishedDelegate.ExecuteIfBound();
+    } else {
+        onHeavyAttackFinishedDelegate.ExecuteIfBound();
+    }
 }
