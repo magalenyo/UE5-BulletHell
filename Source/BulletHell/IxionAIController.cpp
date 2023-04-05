@@ -28,7 +28,6 @@ const FVector AIxionAIController::GetPredictedDestination() const
     float projectileSpeed = 3000;
     float timeToReach = (enemyPosition - GetPawn()->GetActorLocation()).Size() / projectileSpeed;
     FVector positionToLookAt = enemyPosition + (GetPawn()->GetActorForwardVector() * character->GetMovementSpeed() * timeToReach);
-    UE_LOG(LogTemp, Display, TEXT("Your messaasdge %s"), *GetPawn()->GetActorForwardVector().ToString());
     DrawDebugLine(GetWorld(), positionToLookAt, positionToLookAt + FVector(0, 0, 500), FColor::Red, false, -1.0f, 0, 1.0f);
 
     return positionToLookAt;
@@ -153,8 +152,9 @@ void AIxionAIController::BAMachineGun()
     AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
     if (projectile)
     {
-        projectile->SetPredictionSpeed(randomTargetPosition);
         UGameplayStatics::FinishSpawningActor(projectile, transform);
+        
+        projectile->SetPredictionSpeed(randomTargetPosition, playerPawn->GetVelocity());
 
         projectile->SetOwner(this);
         // https://forums.unrealengine.com/t/spawn-actor-with-expose-on-spawn-properties-in-c/330104 -> deferred
@@ -202,9 +202,9 @@ void AIxionAIController::HAVortex()
         float extra = angleExtraPerWave * currentWaveVortex * angleOffsetPerWave;
         FRotator pointRotation = rotationTowardsPlayer + FRotator((angleToRotate * i) + extra, 90, 0);
 
-        if (i == 0) {
-            UE_LOG(LogTemp, Display, TEXT("TowardsPlayer: %s Initial rotation: %f, Extra: %f FInal: %s"), *rotationTowardsPlayer.ToString(), angleToRotate, extra, *pointRotation.ToString());
-        }
+        // if (i == 0) {
+        //     UE_LOG(LogTemp, Display, TEXT("TowardsPlayer: %s Initial rotation: %f, Extra: %f FInal: %s"), *rotationTowardsPlayer.ToString(), angleToRotate, extra, *pointRotation.ToString());
+        // }
 
         FVector bulletLocation = location;
         FTransform transform = FTransform(pointRotation, bulletLocation);

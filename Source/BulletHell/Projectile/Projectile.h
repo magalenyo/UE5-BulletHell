@@ -25,7 +25,7 @@ public:
 
 	const float GetProjectileSpeed() const;
 
-	void SetPredictionSpeed(FVector targetLocation);
+	void SetPredictionSpeed(FVector targetLocation, FVector targetVelocity);
 	void SetSpeed(float newSpeed);
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 

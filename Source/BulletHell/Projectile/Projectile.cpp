@@ -39,7 +39,7 @@ const float AProjectile::GetProjectileSpeed() const
 	return speed;
 }
 
-void AProjectile::SetPredictionSpeed(FVector targetLocation)
+void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVelocity)
 {
 	if (!projectileMovementComponent)
     {
@@ -51,8 +51,8 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation)
     
     float distance = FVector::Distance(startLocation, targetLocation);
     float timeToTarget = distance / speed;
-    FVector velocityToTarget = projectileMovementComponent->Velocity * timeToTarget;
-    FVector endLocation = startLocation + velocityToTarget;
+    FVector velocityToTarget = targetVelocity * timeToTarget;
+    FVector endLocation = targetLocation + velocityToTarget;
     // UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
     // UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
     // The gravity scale of the world
@@ -67,8 +67,8 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation)
         speed,
         false,
         0.0f,
-        0.0f,
-        ESuggestProjVelocityTraceOption::TraceFullPath,
+        10.0f,
+        ESuggestProjVelocityTraceOption::DoNotTrace,
         FCollisionResponseParams::DefaultResponseParam,
         TArray<AActor*>(),
         true
@@ -83,6 +83,13 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation)
         projectileMovementComponent->Velocity = LaunchVelocity;
         projectileMovementComponent->Activate();
     }
+    else {
+        UE_LOG(LogTemp, Display, TEXT("Your CAN'T"));
+    }
+
+    // Distance = Length(Target_Position - Firing_Position)
+    // Time = Distance / Bullet_Speed
+    // Predicted_Position = Target_Position + (Target_Velocity * Time)
 }
 
 void AProjectile::SetSpeed(float newSpeed)
@@ -115,7 +122,6 @@ void AProjectile::SetDecelerationCurve(UCurveFloat* decelerationCurve)
     decelerationTimeline->RegisterComponent();
     decelerationTimeline->Play();
     PrimaryActorTick.bCanEverTick = true;
-    UE_LOG(LogTemp, Display, TEXT("decelerationTimeline %s"), &decelerationTimeline);
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -135,6 +141,5 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 void AProjectile::OnDecelerationTimelineUpdate(float Alpha)
 {
     SetSpeed(initialDecelerationSpeed * Alpha);
-    UE_LOG(LogTemp, Display, TEXT("Progress: %f , NEW SPEED: %f"), Alpha, speed);
 }
 
