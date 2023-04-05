@@ -50,7 +50,7 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
     FVector LaunchVelocity;
     
     float distance = FVector::Distance(startLocation, targetLocation);
-    float timeToTarget = distance / speed;
+    float timeToTarget = distance / (speed * predictionSpeedMitigationFactor);
     FVector velocityToTarget = targetVelocity * timeToTarget;
     FVector endLocation = targetLocation + velocityToTarget;
     // UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
@@ -64,7 +64,7 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
         LaunchVelocity,
         startLocation,
         endLocation,
-        speed,
+        speed * predictionSpeedMitigationFactor,
         false,
         0.0f,
         10.0f,

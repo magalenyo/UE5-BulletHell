@@ -42,6 +42,9 @@ private:
 	float speed = 2500.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
+	float predictionSpeedMitigationFactor = 0.9f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	class UParticleSystem* hitParticles;
 	
 	// COMPONENTS
