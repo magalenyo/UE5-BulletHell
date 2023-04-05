@@ -44,6 +44,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float predictionSpeedMitigationFactor = 0.9f;
 
+	UPROPERTY(EditAnywhere, Category = "Debug")
+	bool debugPredictionTrace = false;
+
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	class UParticleSystem* hitParticles;
 	

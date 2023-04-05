@@ -53,12 +53,7 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
     float timeToTarget = distance / (speed * predictionSpeedMitigationFactor);
     FVector velocityToTarget = targetVelocity * timeToTarget;
     FVector endLocation = targetLocation + velocityToTarget;
-    // UE_LOG(LogTemp, Display, TEXT("START message %s"), *startLocation.ToString());
-    // UE_LOG(LogTemp, Display, TEXT("END message %s"), *endLocation.ToString());
-    // The gravity scale of the world
-    // float GravityScale = GetWorld()->GetGravityZ() / -980.0f;
 
-    // Calculate the launch velocity
     bool bHasValidSolution = UGameplayStatics::SuggestProjectileVelocity(
         this,
         LaunchVelocity,
@@ -67,11 +62,11 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
         speed * predictionSpeedMitigationFactor,
         false,
         0.0f,
-        10.0f,
+        10.0f,      // Keep the gravity factor low so it does predict a "linear" trajectory
         ESuggestProjVelocityTraceOption::DoNotTrace,
         FCollisionResponseParams::DefaultResponseParam,
         TArray<AActor*>(),
-        true
+        debugPredictionTrace
     );
 
     if (bHasValidSolution)
@@ -86,10 +81,6 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
     else {
         UE_LOG(LogTemp, Display, TEXT("Your CAN'T"));
     }
-
-    // Distance = Length(Target_Position - Firing_Position)
-    // Time = Distance / Bullet_Speed
-    // Predicted_Position = Target_Position + (Target_Velocity * Time)
 }
 
 void AProjectile::SetSpeed(float newSpeed)
