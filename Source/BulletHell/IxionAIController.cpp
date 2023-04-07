@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
 
 
@@ -53,6 +54,9 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
         case EIxionBasicAttack::MACHINE_GUN:
             mustLookAtPlayer = true;
             GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, .05, true);
+        break;
+        case EIxionBasicAttack::BURST:
+            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BABurst, .05, true);
         break;
         default:
             AttackDefault();
@@ -164,13 +168,58 @@ void AIxionAIController::BAMachineGun()
 
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
 
-    currentBulletsBasicAttack++;
-    if (currentBulletsBasicAttack == bulletsBasicAttack){
+    currentBulletsMachineGun++;
+    if (currentBulletsMachineGun == bulletsBasicAttack){
         FinishAttack();
     }
     else{
         float nextTime = FMath::RandRange(.05f, .15f);
         GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, nextTime, true);
+    }
+}
+
+void AIxionAIController::BABurst()
+{
+    LookAtPlayer();
+
+    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
+
+    if (!character) {
+        return;
+    }
+
+    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
+
+    if (!projectileSpawnPoint) {
+        return;
+    }
+
+    FVector location = projectileSpawnPoint->GetComponentLocation();
+
+    FVector directionTowardsPlayer = (playerPawn->GetActorLocation() - location).GetSafeNormal();
+
+    for (int i = 0; i < bulletsPerWaveBurstAttack; ++i) {
+        FVector direction = UKismetMathLibrary::RandomUnitVectorInConeInRadians(directionTowardsPlayer, UKismetMathLibrary::DegreesToRadians(angleBurstAttack));
+        FTransform transform = FTransform(direction.Rotation(), location);
+        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
+        if (projectile)
+        {
+            UGameplayStatics::FinishSpawningActor(projectile, transform);
+            projectile->SetSpeed(speedBurstAttack);
+            projectile->SetOwner(this);
+        }
+    }
+
+    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+
+	currentWaveBurst++;
+
+    if (currentWaveBurst == wavesBurstAttack) {
+        FinishAttack();
+    }
+    else {
+        float nextTime = durationBurstAttack / wavesBurstAttack;
+        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BABurst, nextTime, true);
     }
 }
 
@@ -236,8 +285,9 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
 {
     isAttacking = false;
     mustLookAtPlayer = false;
-    currentBulletsBasicAttack = 0;
+    currentBulletsMachineGun = 0;
     currentWaveVortex = 0;
+    currentWaveBurst = 0;
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
     if (isBasicAttack) {
         onBasicAttackFinishedDelegate.ExecuteIfBound();

@@ -12,6 +12,7 @@ enum class EIxionBasicAttack : uint8
 {
 	EXIT_ATTACK UMETA(DisplayName = "Exit Attack"),
 	MACHINE_GUN UMETA(DisplayName = "Machine Gun Attack"),
+	BURST UMETA(DisplayName = "Burst"),
 	COUNT
 };
 
@@ -42,6 +43,7 @@ public:
 	void AttackDefault();
 	void BAExit();
 	void BAMachineGun();
+	void BABurst();
 	void HAVortex();
 
 	FOnBasicAttackFinishedSignature onBasicAttackFinishedDelegate;
@@ -81,6 +83,25 @@ private:
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
 	UCurveFloat* decelerationCurveExitAttack;
 
+	// BA: Burst Attack
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	int bulletsPerWaveBurstAttack = 4;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	int wavesBurstAttack = 6;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	float durationBurstAttack = .3f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	float angleBurstAttack = 40.0f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	float speedBurstAttack = 800.0f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	float delayToHomeBurstAttack = .5f;
+
 	// HA: VORTEX
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	int startPointsPerWaveVortex = 12;
@@ -104,9 +125,11 @@ private:
 
 	FTimerHandle fireRateTimerHandle;
 
-	int currentBulletsBasicAttack = 0;
+	int currentBulletsMachineGun = 0;
 
 	int currentWaveVortex = 0;
+
+	int currentWaveBurst = 0;
 
 	const FVector GetPredictedDestination() const;
 
