@@ -16,24 +16,6 @@ void AIxionAIController::BeginPlay()
     Super::BeginPlay();
 }
 
-const FVector AIxionAIController::GetPredictedDestination() const
-{
-    AShooterCharacter* character = Cast<AShooterCharacter>(playerPawn);
-
-    if (!character) {
-        return FVector(0, 0, 0);
-    }
-
-    FVector enemyPosition = playerPawn->GetActorLocation();
-    // float projectileSpeed = projectile.GetProjectileSpeed();
-    float projectileSpeed = 3000;
-    float timeToReach = (enemyPosition - GetPawn()->GetActorLocation()).Size() / projectileSpeed;
-    FVector positionToLookAt = enemyPosition + (GetPawn()->GetActorForwardVector() * character->GetMovementSpeed() * timeToReach);
-    DrawDebugLine(GetWorld(), positionToLookAt, positionToLookAt + FVector(0, 0, 500), FColor::Red, false, -1.0f, 0, 1.0f);
-
-    return positionToLookAt;
-}
-
 void AIxionAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -145,13 +127,9 @@ void AIxionAIController::BAMachineGun()
     float randomX = FMath::RandRange(-radiusOffset, radiusOffset);
     float randomY = FMath::RandRange(-radiusOffset, radiusOffset);
     float randomZ = FMath::RandRange(-radiusOffset, radiusOffset);
-    FVector randomTargetPosition =  (usePredicted ? GetPredictedDestination() : playerPawn->GetActorLocation()) + FVector(randomX, randomY, -heightOffset + randomZ);
-    // FRotator randomRotation = LookAt(location, playerPawn->GetActorLocation() + FVector(randomX, randomY, -heightOffset));
-    // FVector initialDestination = usePredicted ? GetPredictedDestination() : playerPawn->GetActorLocation();
+    FVector randomTargetPosition = playerPawn->GetActorLocation() + FVector(randomX, randomY, -heightOffset + randomZ);
     FRotator randomRotation = LookAt(location, randomTargetPosition);
 
-	// AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(projectileClass, location, randomRotation);
-	// projectile->SetOwner(this);
     FTransform transform = FTransform(randomRotation, location);
     AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
     if (projectile)
@@ -161,9 +139,6 @@ void AIxionAIController::BAMachineGun()
         projectile->SetPredictionSpeed(randomTargetPosition, playerPawn->GetVelocity());
 
         projectile->SetOwner(this);
-        // https://forums.unrealengine.com/t/spawn-actor-with-expose-on-spawn-properties-in-c/330104 -> deferred
-        // https://forums.unrealengine.com/t/spawning-an-actor-with-parameters/329151/3 -> deferred
-        // https://www.youtube.com/watch?v=mHofF0ddts0 -> Suggest projectile speed
     }
 
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
@@ -173,7 +148,7 @@ void AIxionAIController::BAMachineGun()
         FinishAttack();
     }
     else{
-        float nextTime = FMath::RandRange(.05f, .15f);
+        float nextTime = FMath::RandRange(nextAttackMinTimeMachineGun, nextAttackMaxTimeMachineGun);
         GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, nextTime, true);
     }
 }

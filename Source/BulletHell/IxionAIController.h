@@ -54,8 +54,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere, Category="Combat")
-	bool usePredicted = false;
 
 	// BA: Machine Gun
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
@@ -66,6 +64,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
 	float radiusOffset = 100.0f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	float nextAttackMinTimeMachineGun = .03f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	float nextAttackMaxTimeMachineGun = .06f;
 
 	// BA: Exit Attack
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
@@ -130,8 +134,6 @@ private:
 	int currentWaveVortex = 0;
 
 	int currentWaveBurst = 0;
-
-	const FVector GetPredictedDestination() const;
 
 	void FinishAttack(bool isBasicAttack = true);
 
