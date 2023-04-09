@@ -60,7 +60,7 @@ private:
 
 	// BA: Machine Gun
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	int bulletsBasicAttack = 30;
+	int bulletsBasicAttack = 70;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
 	float heightOffset = 10.0f;

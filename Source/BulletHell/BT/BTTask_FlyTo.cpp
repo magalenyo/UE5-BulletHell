@@ -46,12 +46,12 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
         FVector pawnLocation = pawn->GetActorLocation();
         FVector directionToPosition = (destination - pawnLocation).GetSafeNormal();
 
-        FRotator currentRotation = pawn->GetActorRotation();
-        FRotator newRotation = FRotator::MakeFromEuler(FVector(currentRotation.Pitch, currentRotation.Roll, directionToPosition.Rotation().Yaw));
-        pawn->SetActorRotation(newRotation);
-
         characterMovementComponent->SetMovementMode(MOVE_Flying);
         characterMovementComponent->Velocity = directionToPosition * characterMovementComponent->GetMaxSpeed();
+
+        FRotator actorRotation = pawn->GetActorRotation();
+        FRotator velocityRotation = characterMovementComponent->Velocity.Rotation();
+        pawn->SetActorRotation(FRotator(0, velocityRotation.Yaw, 0));
     
         float distanceToPosition = FVector::Distance(pawnLocation, destination);
         if (distanceToPosition <= acceptanceRadius)

@@ -318,7 +318,6 @@ void AIxionAIController::RepositionVortexProjectiles()
     float timeToReposition = timePerWave * 2;
     currentWaveVortexReposition++;
 
-    UE_LOG(LogTemp, Display, TEXT("Current time: %f"), timeToReposition);
     GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
     GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &AIxionAIController::RepositionVortexProjectiles, timeToReposition, false);
 }
