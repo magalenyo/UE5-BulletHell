@@ -115,6 +115,11 @@ void AProjectile::SetDecelerationCurve(UCurveFloat* decelerationCurve)
     PrimaryActorTick.bCanEverTick = true;
 }
 
+void AProjectile::SetVelocity(FVector direction)
+{
+    projectileMovementComponent->Velocity = direction;
+}
+
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (hitParticles) {

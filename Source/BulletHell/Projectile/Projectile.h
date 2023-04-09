@@ -28,6 +28,7 @@ public:
 	void SetPredictionSpeed(FVector targetLocation, FVector targetVelocity);
 	void SetSpeed(float newSpeed);
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
+	void SetVelocity(FVector direction);		// Direction should be without applying speed
 
 private:
 

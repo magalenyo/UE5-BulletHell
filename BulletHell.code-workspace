@@ -13,7 +13,8 @@
 		"typescript.tsc.autoDetect": "off",
 		"files.associations": {
 			"random": "cpp",
-			"*.ipp": "cpp"
+			"*.ipp": "cpp",
+			"vector": "cpp"
 		}
 	},
 	"extensions": {

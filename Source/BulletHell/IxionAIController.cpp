@@ -10,6 +10,12 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
 
+AIxionAIController::AIxionAIController() 
+{
+    // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this, UAttack_Ixion_BAMachineGun::StaticClass(), FName("attacktest"));
+    // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this);
+    // attacktest = CreateDefaultSubobject<UAttack_Ixion_BAMachineGun>(TEXT("ObjectName"));
+}
 
 void AIxionAIController::BeginPlay()
 {
@@ -38,6 +44,7 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
             GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, .05, true);
         break;
         case EIxionBasicAttack::BURST:
+            projectilesBurst.resize(bulletsPerWaveBurstAttack * wavesBurstAttack);
             GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BABurst, .05, true);
         break;
         default:
@@ -182,6 +189,8 @@ void AIxionAIController::BABurst()
             UGameplayStatics::FinishSpawningActor(projectile, transform);
             projectile->SetSpeed(speedBurstAttack);
             projectile->SetOwner(this);
+
+            projectilesBurst[i + (currentWaveBurst * bulletsPerWaveBurstAttack)] = projectile;
         }
     }
 
@@ -190,7 +199,17 @@ void AIxionAIController::BABurst()
 	currentWaveBurst++;
 
     if (currentWaveBurst == wavesBurstAttack) {
-        FinishAttack();
+        GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, [this]() {
+            FVector playerLocation = playerPawn->GetActorLocation();
+            for (AProjectile* projectile : projectilesBurst)
+            {
+                if (projectile) {
+                    FVector directionToPlayer = (playerLocation - projectile->GetActorLocation()).GetSafeNormal();
+                    projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
+                }
+            }
+            FinishAttack();
+        }, delayToHomeBurstAttack, false);
     }
     else {
         float nextTime = durationBurstAttack / wavesBurstAttack;
@@ -263,6 +282,7 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
     currentBulletsMachineGun = 0;
     currentWaveVortex = 0;
     currentWaveBurst = 0;
+    projectilesBurst.clear();
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
     if (isBasicAttack) {
         onBasicAttackFinishedDelegate.ExecuteIfBound();

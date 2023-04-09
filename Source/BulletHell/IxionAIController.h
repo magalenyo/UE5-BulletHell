@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ShooterAIController.h"
 #include "Delegates/Delegate.h"
+#include "Attacks/Attack_Ixion_BAMachineGun.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -35,6 +36,8 @@ class BULLETHELL_API AIxionAIController : public AShooterAIController
 	GENERATED_BODY()
 
 public:
+	AIxionAIController();
+
 	virtual void Tick(float DeltaSeconds) override;
 
 	// BASIC ATTACKS
@@ -122,6 +125,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
 	float rotationSpeedVortex = 4.0f;
 
+	// UPROPERTY(EditAnywhere, Category="test")
+	// UAttack_Ixion_BAMachineGun* attacktest;
+
 	// ATTRIBUTES 
 	bool isAttacking = false;
 
@@ -134,6 +140,8 @@ private:
 	int currentWaveVortex = 0;
 
 	int currentWaveBurst = 0;
+
+	std::vector<class AProjectile*> projectilesBurst;
 
 	void FinishAttack(bool isBasicAttack = true);
 
