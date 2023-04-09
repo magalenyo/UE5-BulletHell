@@ -60,6 +60,8 @@ void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
     switch(attack) {
         case EIxionHeavyAttack::VORTEX:
             mustLookAtPlayer = true;
+            targetPositionVortex = playerPawn->GetActorLocation();
+            projectilesVortex.resize(startPointsPerWaveVortex * wavesPerPointVortex);
             LookAtPlayer();
             GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, .05, true);
         break;
@@ -234,8 +236,8 @@ void AIxionAIController::HAVortex()
     }
 
     FVector location = projectileSpawnPoint->GetComponentLocation();
-    FVector targetLocation = playerPawn->GetActorLocation();
-    FRotator rotationTowardsPlayer = LookAt(targetLocation, location);
+    // FVector targetLocation = playerPawn->GetActorLocation();
+    FRotator rotationTowardsPlayer = LookAt(targetPositionVortex, location);
 
     float angleToRotate = 360.0f / startPointsPerWaveVortex;
     float angleOffsetPerWave = rotationSpeedVortex / durationVortex;
@@ -245,35 +247,38 @@ void AIxionAIController::HAVortex()
         float extra = angleExtraPerWave * currentWaveVortex * angleOffsetPerWave;
         FRotator pointRotation = rotationTowardsPlayer + FRotator((angleToRotate * i) + extra, 90, 0);
 
-        // if (i == 0) {
-        //     UE_LOG(LogTemp, Display, TEXT("TowardsPlayer: %s Initial rotation: %f, Extra: %f FInal: %s"), *rotationTowardsPlayer.ToString(), angleToRotate, extra, *pointRotation.ToString());
-        // }
-
         FVector bulletLocation = location;
         FTransform transform = FTransform(pointRotation, bulletLocation);
 
         AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
         if (projectile)
         {
-            projectile->SetSpeed(speedExitAttack);
+            projectile->SetSpeed(speedVortexAttack);
             UGameplayStatics::FinishSpawningActor(projectile, transform);
 
             projectile->SetOwner(this);
         }
+        projectilesVortex[i + (currentWaveVortex * startPointsPerWaveVortex)] = projectile;
     }
 
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
 
+    float timePerWave = durationVortex / wavesPerPointVortex;
+    float timeToReposition = timePerWave * currentWaveVortex;
+
+    if (currentWaveVortex == 0) {
+        GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &AIxionAIController::RepositionVortexProjectiles, 0.05, false);
+    }
+
     currentWaveVortex++;
     if (currentWaveVortex == wavesPerPointVortex) {
-        FinishAttack(false);
+        // FinishAttack(false);
     }
     else{
         float nextTime = durationVortex / wavesPerPointVortex;
         GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, nextTime, true);
     }
 }
-
 
 void AIxionAIController::FinishAttack(bool isBasicAttack) 
 {
@@ -282,11 +287,38 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
     currentBulletsMachineGun = 0;
     currentWaveVortex = 0;
     currentWaveBurst = 0;
+    currentWaveVortexReposition = 0;
     projectilesBurst.clear();
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
+    GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
     if (isBasicAttack) {
         onBasicAttackFinishedDelegate.ExecuteIfBound();
     } else {
         onHeavyAttackFinishedDelegate.ExecuteIfBound();
     }
+}
+
+void AIxionAIController::RepositionVortexProjectiles() 
+{
+    if (currentWaveVortexReposition == wavesPerPointVortex) {
+        GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
+        FinishAttack(false);
+        return;
+    }
+
+    for (int i = (currentWaveVortexReposition * startPointsPerWaveVortex); i < ((currentWaveVortexReposition + 1) * startPointsPerWaveVortex); ++i)
+    {
+        AProjectile* projectile = projectilesVortex[i];
+        if (projectile) {
+            FVector directionToPlayer = (targetPositionVortex - projectile->GetActorLocation()).GetSafeNormal();
+            projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
+        }
+    }
+    float timePerWave = durationVortex / wavesPerPointVortex;
+    float timeToReposition = timePerWave * 2;
+    currentWaveVortexReposition++;
+
+    UE_LOG(LogTemp, Display, TEXT("Current time: %f"), timeToReposition);
+    GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
+    GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &AIxionAIController::RepositionVortexProjectiles, timeToReposition, false);
 }

@@ -117,6 +117,9 @@ void AProjectile::SetDecelerationCurve(UCurveFloat* decelerationCurve)
 
 void AProjectile::SetVelocity(FVector direction)
 {
+    if (!projectileMovementComponent) {
+        return;
+    }
     projectileMovementComponent->Velocity = direction;
 }
 

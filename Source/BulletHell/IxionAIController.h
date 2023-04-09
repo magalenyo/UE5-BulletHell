@@ -116,14 +116,14 @@ private:
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	int wavesPerPointVortex = 24;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float speedVortexAttack = 800.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	float durationVortex = 4.0f;
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
+	float durationVortex = .85f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	float rotationSpeedVortex = 4.0f;
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
+	float rotationSpeedVortex = 2.0f;
 
 	// UPROPERTY(EditAnywhere, Category="test")
 	// UAttack_Ixion_BAMachineGun* attacktest;
@@ -137,12 +137,22 @@ private:
 
 	int currentBulletsMachineGun = 0;
 
+	int currentWaveBurst = 0;
+
 	int currentWaveVortex = 0;
 
-	int currentWaveBurst = 0;
+	int currentWaveVortexReposition = 0;
+
+	FTimerHandle retargetWaveVortexTimerHandle;
+
+	std::vector<class AProjectile*> projectilesVortex;
+
+	FVector targetPositionVortex = FVector::Zero();
 
 	std::vector<class AProjectile*> projectilesBurst;
 
 	void FinishAttack(bool isBasicAttack = true);
+
+	void RepositionVortexProjectiles();
 
 };
