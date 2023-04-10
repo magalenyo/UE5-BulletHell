@@ -206,8 +206,9 @@ void AIxionAIController::BABurst()
             for (AProjectile* projectile : projectilesBurst)
             {
                 if (projectile) {
-                    FVector directionToPlayer = (playerLocation - projectile->GetActorLocation()).GetSafeNormal();
-                    projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
+                    // Try to "retarget" the parallel vector from player to projectileSpawnPoint
+                    // FVector directionToPlayer = (playerLocation - projectile->GetActorLocation()).GetSafeNormal();
+                    // projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
                 }
             }
             FinishAttack();
