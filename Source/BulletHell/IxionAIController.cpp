@@ -237,7 +237,6 @@ void AIxionAIController::HAVortex()
     }
 
     FVector location = projectileSpawnPoint->GetComponentLocation();
-    // FVector targetLocation = playerPawn->GetActorLocation();
     FRotator rotationTowardsPlayer = LookAt(targetPositionVortex, location);
 
     float angleToRotate = 360.0f / startPointsPerWaveVortex;
@@ -252,11 +251,13 @@ void AIxionAIController::HAVortex()
         FTransform transform = FTransform(pointRotation, bulletLocation);
 
         AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
-        if (projectile)
-        {
+        if (projectile) {
+            FVector velocityOutwards = pointRotation.Vector();
+            FVector finalVelocity = FVector::CrossProduct(velocityOutwards, rotationTowardsPlayer.Vector());
+
             projectile->SetSpeed(speedVortexAttack);
             UGameplayStatics::FinishSpawningActor(projectile, transform);
-
+            projectile->SetVelocity(finalVelocity * speedVortexAttack);
             projectile->SetOwner(this);
         }
         projectilesVortex[i + (currentWaveVortex * startPointsPerWaveVortex)] = projectile;
