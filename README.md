@@ -20,5 +20,6 @@ The exit attack will always be performed before it moves to a different location
 Full video: https://www.youtube.com/watch?v=TG0Axq1YqVo
 
 
-Short video
-https://user-images.githubusercontent.com/27434068/231311169-f3ea8f30-a542-48d2-b306-21095bebf257.mp4
+Short video:
+
+![ezgif-5-1d33715c98](https://user-images.githubusercontent.com/27434068/231311653-644a78c2-0314-4a44-b16b-2a60acce5d71.gif)
