@@ -15,10 +15,8 @@ class BULLETHELL_API UAttack_Ixion_BAMachineGun : public UAttack
 	GENERATED_BODY()
 
 public:
-	UAttack_Ixion_BAMachineGun();
 
 	virtual void Start() override;
-	virtual void Tick(float DeltaTime) override;
 	virtual void Finish() override;
 	
 private:

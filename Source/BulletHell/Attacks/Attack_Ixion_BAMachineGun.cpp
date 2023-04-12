@@ -3,24 +3,12 @@
 #include "Attacks/Attack_Ixion_BAMachineGun.h"
 #include "Projectile/Projectile.h"
 #include "Kismet/GameplayStatics.h" 
-#include "TimerManager.h"
 #include "ShooterCharacter.h"
 #include "IxionAIController.h"
-#include "Engine/World.h"
-
-UAttack_Ixion_BAMachineGun::UAttack_Ixion_BAMachineGun() 
-{
-
-}
 
 void UAttack_Ixion_BAMachineGun::Start() 
 {
     GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, this, &UAttack_Ixion_BAMachineGun::BAMachineGun, .05, true);
-}
-
-void UAttack_Ixion_BAMachineGun::Tick(float DeltaTime)
-{
-    
 }
 
 void UAttack_Ixion_BAMachineGun::Finish()

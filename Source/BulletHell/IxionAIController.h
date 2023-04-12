@@ -6,6 +6,7 @@
 #include "ShooterAIController.h"
 #include "Delegates/Delegate.h"
 #include "Attacks/Attack_Ixion_BAMachineGun.h"
+#include "Attacks/Attack_Ixion_BABurst.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -92,23 +93,23 @@ private:
 	UCurveFloat* decelerationCurveExitAttack;
 
 	// BA: Burst Attack
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	int bulletsPerWaveBurstAttack = 4;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// int bulletsPerWaveBurstAttack = 4;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	int wavesBurstAttack = 6;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// int wavesBurstAttack = 6;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float durationBurstAttack = .3f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// float durationBurstAttack = .3f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float angleBurstAttack = 40.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// float angleBurstAttack = 40.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float speedBurstAttack = 800.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// float speedBurstAttack = 800.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float delayToHomeBurstAttack = .5f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
+	// float delayToHomeBurstAttack = .5f;
 
 	// HA: VORTEX
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
@@ -130,6 +131,9 @@ private:
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_BAMachineGun* baMachineGun;
 
+	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UAttack_Ixion_BABurst* baBurst;
+
 	// ATTRIBUTES 
 	bool isAttacking = false;
 
@@ -137,9 +141,6 @@ private:
 
 	FTimerHandle fireRateTimerHandle;
 
-	int currentBulletsMachineGun = 0;
-
-	int currentWaveBurst = 0;
 
 	int currentWaveVortex = 0;
 
@@ -151,7 +152,6 @@ private:
 
 	FVector targetPositionVortex = FVector::Zero();
 
-	std::vector<class AProjectile*> projectilesBurst;
 
 
 	void RepositionVortexProjectiles();
