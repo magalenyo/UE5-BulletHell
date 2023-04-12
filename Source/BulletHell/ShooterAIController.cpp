@@ -78,3 +78,13 @@ const float AShooterAIController::GetFlyOffset()
 {
     return flyOffset;
 }
+
+APawn* AShooterAIController::GetPlayerPawn() 
+{
+    return playerPawn;
+}
+
+const TSubclassOf<AProjectile> AShooterAIController::GetProjectileClass() const
+{
+    return projectileClass;
+}

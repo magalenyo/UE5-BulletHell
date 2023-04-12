@@ -14,12 +14,16 @@ AIxionAIController::AIxionAIController()
 {
     // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this, UAttack_Ixion_BAMachineGun::StaticClass(), FName("attacktest"));
     // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this);
-    // attacktest = CreateDefaultSubobject<UAttack_Ixion_BAMachineGun>(TEXT("ObjectName"));
+    // baMachineGun = CreateDefaultSubobject<UAttack_Ixion_BAMachineGun>(TEXT("BA Machine Gun"),);
 }
 
 void AIxionAIController::BeginPlay()
 {
     Super::BeginPlay();
+
+    if (baMachineGun) {
+        baMachineGun->SetOwner(this);
+    }
 }
 
 void AIxionAIController::Tick(float DeltaSeconds)
@@ -41,7 +45,12 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
         break;
         case EIxionBasicAttack::MACHINE_GUN:
             mustLookAtPlayer = true;
-            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, .05, true);
+            if (baMachineGun) {
+                baMachineGun->Start();
+            }
+            else{
+                FinishAttack();
+            }
         break;
         case EIxionBasicAttack::BURST:
             projectilesBurst.resize(bulletsPerWaveBurstAttack * wavesBurstAttack);
@@ -115,52 +124,6 @@ void AIxionAIController::BAExit()
     GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
 }
 
-void AIxionAIController::BAMachineGun()
-{
-    LookAtPlayer();
-
-    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
-
-    if (!character) {
-        return;
-    }
-
-    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
-
-    if (!projectileSpawnPoint) {
-        return;
-    }
-
-    FVector location = projectileSpawnPoint->GetComponentLocation();
-
-    float randomX = FMath::RandRange(-radiusOffset, radiusOffset);
-    float randomY = FMath::RandRange(-radiusOffset, radiusOffset);
-    float randomZ = FMath::RandRange(-radiusOffset, radiusOffset);
-    FVector randomTargetPosition = playerPawn->GetActorLocation() + FVector(randomX, randomY, -heightOffset + randomZ);
-    FRotator randomRotation = LookAt(location, randomTargetPosition);
-
-    FTransform transform = FTransform(randomRotation, location);
-    AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
-    if (projectile)
-    {
-        UGameplayStatics::FinishSpawningActor(projectile, transform);
-        
-        projectile->SetPredictionSpeed(randomTargetPosition, playerPawn->GetVelocity());
-
-        projectile->SetOwner(this);
-    }
-
-    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-
-    currentBulletsMachineGun++;
-    if (currentBulletsMachineGun == bulletsBasicAttack){
-        FinishAttack();
-    }
-    else{
-        float nextTime = FMath::RandRange(nextAttackMinTimeMachineGun, nextAttackMaxTimeMachineGun);
-        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAMachineGun, nextTime, true);
-    }
-}
 
 void AIxionAIController::BABurst()
 {
@@ -286,7 +249,6 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
 {
     isAttacking = false;
     mustLookAtPlayer = false;
-    currentBulletsMachineGun = 0;
     currentWaveVortex = 0;
     currentWaveBurst = 0;
     currentWaveVortexReposition = 0;

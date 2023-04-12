@@ -40,7 +40,7 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	// BASIC ATTACKS
+	// ATTACKS
 	void StartBasicAttack(const EIxionBasicAttack attack);
 	void StartHeavyAttack(const EIxionHeavyAttack attack);
 	void AttackDefault();
@@ -48,6 +48,7 @@ public:
 	void BAMachineGun();
 	void BABurst();
 	void HAVortex();
+	void FinishAttack(bool isBasicAttack = true);
 
 	FOnBasicAttackFinishedSignature onBasicAttackFinishedDelegate;
 	FOnHeavyAttackFinishedSignature onHeavyAttackFinishedDelegate;
@@ -59,20 +60,20 @@ protected:
 private:
 
 	// BA: Machine Gun
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	int bulletsBasicAttack = 70;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	// int bulletsBasicAttack = 70;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	float heightOffset = 10.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	// float heightOffset = 10.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	float radiusOffset = 100.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	// float radiusOffset = 100.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	float nextAttackMinTimeMachineGun = .03f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	// float nextAttackMinTimeMachineGun = .03f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	float nextAttackMaxTimeMachineGun = .06f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
+	// float nextAttackMaxTimeMachineGun = .06f;
 
 	// BA: Exit Attack
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
@@ -126,7 +127,8 @@ private:
 	float rotationSpeedVortex = 2.0f;
 
 	// UPROPERTY(EditAnywhere, Category="test")
-	// UAttack_Ixion_BAMachineGun* attacktest;
+	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UAttack_Ixion_BAMachineGun* baMachineGun;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;
@@ -151,7 +153,6 @@ private:
 
 	std::vector<class AProjectile*> projectilesBurst;
 
-	void FinishAttack(bool isBasicAttack = true);
 
 	void RepositionVortexProjectiles();
 

@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "ShooterAIController.generated.h"
 
+class AProjectile;
+
 /**
  * 
  */
@@ -19,24 +21,25 @@ public:
 	bool IsDead() const;
 
 	const float GetFlyOffset();
+	APawn* GetPlayerPawn();
+	const TSubclassOf<AProjectile> GetProjectileClass() const;
+
+	const FRotator LookAt(const FVector target) const;
+	const FRotator LookAt(const FVector source, const FVector target) const;
+	void LookAtPlayer();
 	
 protected:
 	UPROPERTY(EditAnywhere)
 	class UBehaviorTree* AIBehavior;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	TSubclassOf<class AProjectile> projectileClass;
+	TSubclassOf<AProjectile> projectileClass;
 
 	APawn* playerPawn;
 
 	virtual void BeginPlay() override;
 
 	const USceneComponent* GetProjectileSpawnPoint() const;
-
-	const FRotator LookAt(const FVector target) const;
-	const FRotator LookAt(const FVector source, const FVector target) const;
-
-	void LookAtPlayer();
 
 private:
 	UPROPERTY(EditAnywhere)
