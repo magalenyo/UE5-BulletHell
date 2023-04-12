@@ -8,6 +8,7 @@
 #include "Attacks/Attack_Ixion_BAMachineGun.h"
 #include "Attacks/Attack_Ixion_BABurst.h"
 #include "Attacks/Attack_Ixion_BAExit.h"
+#include "Attacks/Attack_Ixion_HAVortex.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -61,74 +62,6 @@ protected:
 
 private:
 
-	// BA: Machine Gun
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	// int bulletsBasicAttack = 70;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	// float heightOffset = 10.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	// float radiusOffset = 100.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	// float nextAttackMinTimeMachineGun = .03f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
-	// float nextAttackMaxTimeMachineGun = .06f;
-
-	// BA: Exit Attack
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	// int bulletsExitAttack = 30;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	// float speedExitAttack = 300.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	// float lifeSpanExitAttack = 5.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	// bool useDecelerationCurveExitAttack = true;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	// UCurveFloat* decelerationCurveExitAttack;
-
-	// BA: Burst Attack
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// int bulletsPerWaveBurstAttack = 4;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// int wavesBurstAttack = 6;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// float durationBurstAttack = .3f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// float angleBurstAttack = 40.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// float speedBurstAttack = 800.0f;
-
-	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	// float delayToHomeBurstAttack = .5f;
-
-	// HA: VORTEX
-	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	int startPointsPerWaveVortex = 12;
-
-	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	int wavesPerPointVortex = 24;
-
-	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float speedVortexAttack = 800.0f;
-
-	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float durationVortex = .85f;
-
-	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float rotationSpeedVortex = 2.0f;
-
-	// UPROPERTY(EditAnywhere, Category="test")
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_BAMachineGun* baMachineGun;
 
@@ -138,26 +71,11 @@ private:
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_BAExit* baExit;
 
+	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UAttack_Ixion_HAVortex* haVortex;
+
 	// ATTRIBUTES 
 	bool isAttacking = false;
-
 	bool mustLookAtPlayer = false;
-
-	FTimerHandle fireRateTimerHandle;
-
-
-	int currentWaveVortex = 0;
-
-	int currentWaveVortexReposition = 0;
-
-	FTimerHandle retargetWaveVortexTimerHandle;
-
-	std::vector<class AProjectile*> projectilesVortex;
-
-	FVector targetPositionVortex = FVector::Zero();
-
-
-
-	void RepositionVortexProjectiles();
 
 };

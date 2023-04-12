@@ -20,7 +20,22 @@
 			"xstring": "cpp",
 			"*.ipp": "cpp",
 			"hash_map": "cpp",
-			"string": "cpp"
+			"string": "cpp",
+			"atomic": "cpp",
+			"filesystem": "cpp",
+			"ios": "cpp",
+			"strstream": "cpp",
+			"system_error": "cpp",
+			"xhash": "cpp",
+			"xiosbase": "cpp",
+			"xtree": "cpp",
+			"__hash_table": "cpp",
+			"__split_buffer": "cpp",
+			"__tree": "cpp",
+			"map": "cpp",
+			"set": "cpp",
+			"unordered_map": "cpp",
+			"unordered_set": "cpp"
 		}
 	},
 	"extensions": {

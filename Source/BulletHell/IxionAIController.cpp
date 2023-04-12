@@ -11,9 +11,6 @@
 
 AIxionAIController::AIxionAIController() 
 {
-    // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this, UAttack_Ixion_BAMachineGun::StaticClass(), FName("attacktest"));
-    // attacktest = NewObject<UAttack_Ixion_BAMachineGun>(this);
-    // baMachineGun = CreateDefaultSubobject<UAttack_Ixion_BAMachineGun>(TEXT("BA Machine Gun"),);
 }
 
 void AIxionAIController::BeginPlay()
@@ -30,6 +27,10 @@ void AIxionAIController::BeginPlay()
 
     if (baExit) {
         baExit->SetOwner(this);
+    }
+
+    if (haVortex) {
+        haVortex->SetOwner(this);
     }
 }
 
@@ -85,11 +86,14 @@ void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
 
     switch(attack) {
         case EIxionHeavyAttack::VORTEX:
-            mustLookAtPlayer = true;
-            targetPositionVortex = playerPawn->GetActorLocation();
-            projectilesVortex.resize(startPointsPerWaveVortex * wavesPerPointVortex);
             LookAtPlayer();
-            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, .05, true);
+
+            if (haVortex) {
+                haVortex->Start();
+            }
+            else{
+                FinishAttack();
+            }
         break;
         default:
             AttackDefault();
@@ -104,109 +108,14 @@ void AIxionAIController::AttackDefault()
     onBasicAttackFinishedDelegate.ExecuteIfBound();
 }
 
-
-
-
-
-void AIxionAIController::HAVortex() 
-{
-    LookAtPlayer();
-
-    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
-
-    if (!character) {
-        return;
-    }
-
-    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
-
-    if (!projectileSpawnPoint) {
-        return;
-    }
-
-    FVector location = projectileSpawnPoint->GetComponentLocation();
-    FRotator rotationTowardsPlayer = LookAt(targetPositionVortex, location);
-
-    float angleToRotate = 360.0f / startPointsPerWaveVortex;
-    float angleOffsetPerWave = rotationSpeedVortex / durationVortex;
-    float angleExtraPerWave = 360 / wavesPerPointVortex;
-
-    for (int i = 0; i < startPointsPerWaveVortex; ++i) {
-        float extra = angleExtraPerWave * currentWaveVortex * angleOffsetPerWave;
-        FRotator pointRotation = rotationTowardsPlayer + FRotator((angleToRotate * i) + extra, 90, 0);
-
-        FVector bulletLocation = location;
-        FTransform transform = FTransform(pointRotation, bulletLocation);
-
-        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
-        if (projectile) {
-            FVector velocityOutwards = pointRotation.Vector();
-            FVector finalVelocity = FVector::CrossProduct(velocityOutwards, rotationTowardsPlayer.Vector());
-
-            projectile->SetSpeed(speedVortexAttack);
-            UGameplayStatics::FinishSpawningActor(projectile, transform);
-            projectile->SetVelocity(finalVelocity * speedVortexAttack);
-            projectile->SetOwner(this);
-        }
-        projectilesVortex[i + (currentWaveVortex * startPointsPerWaveVortex)] = projectile;
-    }
-
-    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-
-    float timePerWave = durationVortex / wavesPerPointVortex;
-    float timeToReposition = timePerWave * currentWaveVortex;
-
-    if (currentWaveVortex == 0) {
-        GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &AIxionAIController::RepositionVortexProjectiles, 0.05, false);
-    }
-
-    currentWaveVortex++;
-    if (currentWaveVortex == wavesPerPointVortex) {
-        // FinishAttack(false);
-    }
-    else{
-        float nextTime = durationVortex / wavesPerPointVortex;
-        GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::HAVortex, nextTime, true);
-    }
-}
-
 void AIxionAIController::FinishAttack(bool isBasicAttack) 
 {
     isAttacking = false;
     mustLookAtPlayer = false;
-    currentWaveVortex = 0;
 
-
-    currentWaveVortexReposition = 0;
-    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-    GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
     if (isBasicAttack) {
         onBasicAttackFinishedDelegate.ExecuteIfBound();
     } else {
         onHeavyAttackFinishedDelegate.ExecuteIfBound();
     }
-}
-
-void AIxionAIController::RepositionVortexProjectiles() 
-{
-    if (currentWaveVortexReposition == wavesPerPointVortex) {
-        GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
-        FinishAttack(false);
-        return;
-    }
-
-    for (int i = (currentWaveVortexReposition * startPointsPerWaveVortex); i < ((currentWaveVortexReposition + 1) * startPointsPerWaveVortex); ++i)
-    {
-        AProjectile* projectile = projectilesVortex[i];
-        if (projectile) {
-            FVector directionToPlayer = (targetPositionVortex - projectile->GetActorLocation()).GetSafeNormal();
-            projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
-        }
-    }
-    float timePerWave = durationVortex / wavesPerPointVortex;
-    float timeToReposition = timePerWave * 2;
-    currentWaveVortexReposition++;
-
-    GetWorldTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
-    GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &AIxionAIController::RepositionVortexProjectiles, timeToReposition, false);
 }
