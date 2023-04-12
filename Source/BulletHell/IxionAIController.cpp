@@ -27,6 +27,10 @@ void AIxionAIController::BeginPlay()
     if (baBurst) {
         baBurst->SetOwner(this);
     }
+
+    if (baExit) {
+        baExit->SetOwner(this);
+    }
 }
 
 void AIxionAIController::Tick(float DeltaSeconds)
@@ -44,7 +48,12 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
 
     switch(attack) {
         case EIxionBasicAttack::EXIT_ATTACK:
-            GetWorldTimerManager().SetTimer(fireRateTimerHandle, this, &AIxionAIController::BAExit, .05, true);
+            if (baExit) {
+                baExit->Start();
+            }
+            else{
+                FinishAttack();
+            }
         break;
         case EIxionBasicAttack::MACHINE_GUN:
             mustLookAtPlayer = true;
@@ -95,42 +104,6 @@ void AIxionAIController::AttackDefault()
     onBasicAttackFinishedDelegate.ExecuteIfBound();
 }
 
-void AIxionAIController::BAExit()
-{
-    AShooterCharacter* character = Cast<AShooterCharacter>(GetPawn());
-
-    if (!character) {
-        return;
-    }
-
-    const USceneComponent* projectileSpawnPoint = character->GetProjectileSpawnPoint();
-
-    if (!projectileSpawnPoint) {
-        return;
-    }
-
-    FVector location = projectileSpawnPoint->GetComponentLocation();
-	FRotator rotation = projectileSpawnPoint->GetComponentRotation();
-
-    for (int i = 0; i < bulletsExitAttack; ++i) {
-        FVector randomPosition = FMath::VRand() * 500 + location;
-        FTransform transform = FTransform(LookAt(randomPosition), location);
-        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(projectileClass, transform);
-        if (projectile)
-        {
-            UGameplayStatics::FinishSpawningActor(projectile, transform);
-            projectile->SetOwner(this);
-            projectile->SetLifeSpan(lifeSpanExitAttack);
-            projectile->SetSpeed(speedExitAttack);
-            if (useDecelerationCurveExitAttack && decelerationCurveExitAttack) {
-                projectile->SetDecelerationCurve(decelerationCurveExitAttack);
-            }
-        }
-    }
-
-    FinishAttack();
-    GetWorldTimerManager().ClearTimer(fireRateTimerHandle);
-}
 
 
 

@@ -7,6 +7,7 @@
 #include "Delegates/Delegate.h"
 #include "Attacks/Attack_Ixion_BAMachineGun.h"
 #include "Attacks/Attack_Ixion_BABurst.h"
+#include "Attacks/Attack_Ixion_BAExit.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -77,20 +78,20 @@ private:
 	// float nextAttackMaxTimeMachineGun = .06f;
 
 	// BA: Exit Attack
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	int bulletsExitAttack = 30;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	// int bulletsExitAttack = 30;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	float speedExitAttack = 300.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	// float speedExitAttack = 300.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	float lifeSpanExitAttack = 5.0f;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	// float lifeSpanExitAttack = 5.0f;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	bool useDecelerationCurveExitAttack = true;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	// bool useDecelerationCurveExitAttack = true;
 
-	UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
-	UCurveFloat* decelerationCurveExitAttack;
+	// UPROPERTY(EditAnywhere, Category="Basic Attack: Exit Attack")
+	// UCurveFloat* decelerationCurveExitAttack;
 
 	// BA: Burst Attack
 	// UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
@@ -133,6 +134,9 @@ private:
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_BABurst* baBurst;
+
+	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UAttack_Ixion_BAExit* baExit;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;
