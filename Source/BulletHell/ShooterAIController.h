@@ -29,7 +29,7 @@ public:
 	void LookAtPlayer();
 	
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "AI")
 	class UBehaviorTree* AIBehavior;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")

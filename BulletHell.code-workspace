@@ -53,7 +53,8 @@
 			"locale": "cpp",
 			"random": "cpp",
 			"ratio": "cpp",
-			"tuple": "cpp"
+			"tuple": "cpp",
+			"*.rh": "cpp"
 		}
 	},
 	"extensions": {

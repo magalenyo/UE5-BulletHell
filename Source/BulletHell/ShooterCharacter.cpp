@@ -35,26 +35,6 @@ void AShooterCharacter::BeginPlay()
 void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AShooterCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AShooterCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AShooterCharacter::LookUp);
-	PlayerInputComponent->BindAxis(TEXT("LookUpRate"), this, &AShooterCharacter::LookUpRate);
-	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &AShooterCharacter::LookRight);
-	PlayerInputComponent->BindAxis(TEXT("LookRightRate"), this, &AShooterCharacter::LookRight);
-
-	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &AShooterCharacter::JumpUp);
-	PlayerInputComponent->BindAction(TEXT("Shoot"), IE_Pressed, this, &AShooterCharacter::Shoot);
-    PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AShooterCharacter::StartSprint);
-    PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AShooterCharacter::StopSprint);
-
 }
 
 float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
@@ -94,41 +74,6 @@ const USceneComponent* AShooterCharacter::GetProjectileSpawnPoint() const
 const float AShooterCharacter::GetMovementSpeed() const
 {
 	return GetCharacterMovement()->Velocity.Size();
-}
-
-void AShooterCharacter::MoveForward(float AxisValue)
-{
-	AddMovementInput(GetActorForwardVector() * AxisValue * movementSpeed * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::MoveRight(float AxisValue)
-{
-	AddMovementInput(GetActorRightVector() * AxisValue * movementSpeed * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::LookUp(float AxisValue)
-{
-	AddControllerPitchInput(AxisValue * mouseRotationSpeedVertical * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::LookUpRate(float AxisValue)
-{
-	AddControllerPitchInput(AxisValue * rotationRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::LookRight(float AxisValue)
-{
-	AddControllerYawInput(AxisValue * mouseRotationSpeedHorizontal * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::LookRightRate(float AxisValue)
-{
-	AddControllerPitchInput(AxisValue * rotationRate * GetWorld()->GetDeltaSeconds());
-}
-
-void AShooterCharacter::JumpUp()
-{
-	Jump();
 }
 
 void AShooterCharacter::Shoot()
