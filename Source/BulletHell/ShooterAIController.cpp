@@ -16,6 +16,7 @@ void AShooterAIController::BeginPlay()
     if (AIBehavior && playerPawn) {
         RunBehaviorTree(AIBehavior);
         GetBlackboardComponent()->SetValueAsVector(TEXT("StartLocation"), GetPawn()->GetActorLocation());
+        InitializeBlackboardValues();
     }
 }
 
@@ -87,4 +88,9 @@ APawn* AShooterAIController::GetPlayerPawn()
 const TSubclassOf<AProjectile> AShooterAIController::GetProjectileClass() const
 {
     return projectileClass;
+}
+
+void AShooterAIController::InitializeBlackboardValues()
+{
+
 }

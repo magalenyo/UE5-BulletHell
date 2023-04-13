@@ -41,7 +41,7 @@ const float AProjectile::GetProjectileSpeed() const
 
 void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVelocity)
 {
-	if (!projectileMovementComponent)
+    if (!projectileMovementComponent)
     {
         return;
     }
@@ -71,15 +71,9 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
 
     if (bHasValidSolution)
     {
-        // Set the velocity and activate the projectile movement component
-        // projectileMovementComponent->SetVelocityInLocalSpace(LaunchVelocity);
-		// projectileMovementComponent->Velocity = LaunchVelocity;
 		projectileMovementComponent->bRotationFollowsVelocity = true;
         projectileMovementComponent->Velocity = LaunchVelocity;
         projectileMovementComponent->Activate();
-    }
-    else {
-        UE_LOG(LogTemp, Display, TEXT("Your CAN'T"));
     }
 }
 
@@ -87,7 +81,7 @@ void AProjectile::SetSpeed(float newSpeed)
 {
     speed = newSpeed;
     projectileMovementComponent->MaxSpeed = speed;
-	projectileMovementComponent->InitialSpeed = speed;
+    projectileMovementComponent->InitialSpeed = speed;
 }
 
 void AProjectile::SetDecelerationCurve(UCurveFloat* decelerationCurve)
@@ -125,16 +119,16 @@ void AProjectile::SetVelocity(FVector direction)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (hitParticles) {
-		UGameplayStatics::SpawnEmitterAtLocation(
-			this,
-			hitParticles,
-			GetActorLocation(),
-			GetActorRotation()
-		);
-	}
+    if (hitParticles) {
+        UGameplayStatics::SpawnEmitterAtLocation(
+            this,
+            hitParticles,
+            GetActorLocation(),
+            GetActorRotation()
+        );
+    }
 
-	Destroy();
+    Destroy();
 }
 
 void AProjectile::OnDecelerationTimelineUpdate(float Alpha)

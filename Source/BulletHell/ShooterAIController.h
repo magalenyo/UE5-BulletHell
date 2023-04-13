@@ -41,6 +41,8 @@ protected:
 
 	const USceneComponent* GetProjectileSpawnPoint() const;
 
+	virtual void InitializeBlackboardValues();
+
 private:
 	UPROPERTY(EditAnywhere)
 	float flyOffset = 500;

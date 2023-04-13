@@ -8,6 +8,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Kismet/GameplayStatics.h"
 #include "BT/Ixion/BTTask_Ixion_BasicAttack.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AIxionAIController::AIxionAIController() 
 {
@@ -32,6 +33,11 @@ void AIxionAIController::BeginPlay()
     if (haVortex) {
         haVortex->SetOwner(this);
     }
+}
+
+void AIxionAIController::InitializeBlackboardValues()
+{
+    GetBlackboardComponent()->SetValueAsInt(TEXT("Phase"), 1);
 }
 
 void AIxionAIController::Tick(float DeltaSeconds)
@@ -119,3 +125,4 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
         onHeavyAttackFinishedDelegate.ExecuteIfBound();
     }
 }
+

@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_ClearBackboardValue.generated.h"
+#include "BTTask_ClearBlackboardValue.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BULLETHELL_API UBTTask_ClearBackboardValue : public UBTTask_BlackboardBase
+class BULLETHELL_API UBTTask_ClearBlackboardValue : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 	
 public:
-	UBTTask_ClearBackboardValue();
+	UBTTask_ClearBlackboardValue();
 
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
