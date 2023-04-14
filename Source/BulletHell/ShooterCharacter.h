@@ -64,8 +64,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Sprint")
 	float jumpMultiplier = 1.5f;
 
+	bool isSprinting = false;
+
 	void StartSprint();
 	void StopSprint();
-
-	bool isSprinting = false;
+	virtual void HandleDeath();
+	virtual void DisableCharacter();
 };

@@ -42,16 +42,8 @@ float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent cons
 	float damageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	damageToApply = FMath::Min(health, damageToApply);
 	health -= damageToApply;
-	UE_LOG(LogTemp, Display, TEXT("Health left:%f"), health);
 
-	if (IsDead()) {
-		// ABulletHellGameModeBase* gameMode = GetWorld()->GetAuthGameMode<ABulletHellGameModeBase>();
-		// if (gameMode != nullptr) {
-		// 	gameMode->PawnKilled(this);
-		// }
-		DetachFromControllerPendingDestroy();
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
+	HandleDeath();
 
 	return damageToApply;
 }
@@ -102,4 +94,21 @@ void AShooterCharacter::StopSprint()
 		isSprinting = false;
 	}
 
+}
+
+void AShooterCharacter::HandleDeath()
+{
+	if (IsDead()) {
+		// ABulletHellGameModeBase* gameMode = GetWorld()->GetAuthGameMode<ABulletHellGameModeBase>();
+		// if (gameMode != nullptr) {
+		// 	gameMode->PawnKilled(this);
+		// }
+		DisableCharacter();
+	}
+}
+
+void AShooterCharacter::DisableCharacter()
+{
+	DetachFromControllerPendingDestroy();
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

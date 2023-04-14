@@ -37,7 +37,8 @@ void AIxionAIController::BeginPlay()
 
 void AIxionAIController::InitializeBlackboardValues()
 {
-    GetBlackboardComponent()->SetValueAsInt(TEXT("Phase"), 1);
+    // GetBlackboardComponent()->SetValueAsInt(TEXT("Phase"), 1);
+    SetPhase(1);
 }
 
 void AIxionAIController::Tick(float DeltaSeconds)
@@ -124,5 +125,10 @@ void AIxionAIController::FinishAttack(bool isBasicAttack)
     } else {
         onHeavyAttackFinishedDelegate.ExecuteIfBound();
     }
+}
+
+void AIxionAIController::SetPhase(int newPhase)
+{
+    GetBlackboardComponent()->SetValueAsInt(TEXT("Phase"), newPhase);
 }
 

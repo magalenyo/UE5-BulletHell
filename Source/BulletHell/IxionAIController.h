@@ -52,6 +52,7 @@ public:
 	void BABurst();
 	void HAVortex();
 	void FinishAttack(bool isBasicAttack = true);
+	void SetPhase(int newPhase);
 
 	FOnBasicAttackFinishedSignature onBasicAttackFinishedDelegate;
 	FOnHeavyAttackFinishedSignature onHeavyAttackFinishedDelegate;
