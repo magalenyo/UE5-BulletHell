@@ -30,6 +30,10 @@ void AIxionAIController::BeginPlay()
         baExit->SetOwner(this);
     }
 
+    if (baShockwave) {
+        baShockwave->SetOwner(this);
+    }
+
     if (haVortex) {
         haVortex->SetOwner(this);
     }
@@ -76,6 +80,15 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
             mustLookAtPlayer = true;
             if (baBurst) {
                 baBurst->Start();
+            }
+            else{
+                FinishAttack();
+            }
+        break;
+        case EIxionBasicAttack::SHOCKWAVE:
+            mustLookAtPlayer = true;
+            if (baShockwave) {
+                baShockwave->Start();
             }
             else{
                 FinishAttack();

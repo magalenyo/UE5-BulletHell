@@ -8,15 +8,17 @@
 #include "Attacks/Attack_Ixion_BAMachineGun.h"
 #include "Attacks/Attack_Ixion_BABurst.h"
 #include "Attacks/Attack_Ixion_BAExit.h"
+#include "Attacks/Attack_Ixion_BAShockwave.h"
 #include "Attacks/Attack_Ixion_HAVortex.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
 enum class EIxionBasicAttack : uint8
 {
-	EXIT_ATTACK UMETA(DisplayName = "Exit Attack"),
-	MACHINE_GUN UMETA(DisplayName = "Machine Gun Attack"),
-	BURST UMETA(DisplayName = "Burst"),
+	EXIT_ATTACK,
+	MACHINE_GUN,
+	BURST,
+	SHOCKWAVE,
 	COUNT
 };
 
@@ -72,6 +74,9 @@ private:
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_BAExit* baExit;
+
+	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UAttack_Ixion_BAShockwave* baShockwave;
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Test)
 	UAttack_Ixion_HAVortex* haVortex;
