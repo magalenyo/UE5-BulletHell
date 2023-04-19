@@ -7,7 +7,7 @@ AAttackBehavior_Ixion_BAShockwave::AAttackBehavior_Ixion_BAShockwave()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	mesh->SetupAttachment(root);
+	SetRootComponent(mesh);
 }
 
 void AAttackBehavior_Ixion_BAShockwave::BeginPlay()
@@ -16,7 +16,7 @@ void AAttackBehavior_Ixion_BAShockwave::BeginPlay()
 
 	playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
-	mesh->OnComponentHit.AddDynamic(this, &AAttackBehavior_Ixion_BAShockwave::OnHit);
+	mesh->OnComponentBeginOverlap.AddDynamic(this, &AAttackBehavior_Ixion_BAShockwave::OnBeginOverlap);
 
 	// SetLifeSpan(5.0f);
 }
@@ -39,22 +39,25 @@ void AAttackBehavior_Ixion_BAShockwave::SetDamage(float newDamage)
 	damage = newDamage;
 }
 
-void AAttackBehavior_Ixion_BAShockwave::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AAttackBehavior_Ixion_BAShockwave::SetHitCooldown(float newHitCooldown)
 {
-	UE_LOG(LogTemp, Display, TEXT("Your message %s"), playerPawn);
+	hitCooldown = newHitCooldown;
+}
+
+void AAttackBehavior_Ixion_BAShockwave::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 	if (OtherActor != playerPawn) {
 		return;
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("HIT"));
-	
-	// FPointDamageEvent damageEvent(
-	// 	damage,
-	// 	hit,
-	// 	shotDirection,
-	// 	nullptr
-	// );
-	// AController* ownerController = GetOwnerController();
-	// hitActor->TakeDamage(damage, damageEvent, ownerController, this);
+	if (!alreadyHit) {
+		alreadyHit = true;
+		UE_LOG(LogTemp, Display, TEXT("HIT"));
+
+		GetWorld()->GetTimerManager().SetTimer(cooldownTimerHandle, [this]() {
+            alreadyHit = false;
+			GetWorld()->GetTimerManager().ClearTimer(cooldownTimerHandle);
+        }, hitCooldown, false);
+	}
 }
 

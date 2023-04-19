@@ -21,6 +21,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void SetSpeed(float newSpeed);
 	void SetDamage(float newDamage);
+	void SetHitCooldown(float newHitCooldown);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -35,9 +36,20 @@ private:
 	UPROPERTY(EditAnywhere)
 	float speed = 1.0f;
 
+	UPROPERTY(EditAnywhere)
+	float hitCooldown = .3f;
+
 	APawn* playerPawn = nullptr;
 
+	bool alreadyHit = false;
+
+	FTimerHandle cooldownTimerHandle;
+
+
+	// UFUNCTION()
+	// void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };

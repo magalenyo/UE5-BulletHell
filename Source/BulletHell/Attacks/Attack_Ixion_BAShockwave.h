@@ -28,6 +28,9 @@ private:
 	float duration = 10.0f;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Shockwave")
+	float hitCooldown = .3f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Shockwave")
 	TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
 
 	FTimerHandle fireRateTimerHandle;
