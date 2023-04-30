@@ -23,6 +23,7 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
     FVector parentLocation = controller->GetPawn()->GetActorLocation();
     // UNavigationSystem* NavSys = World->GetNavigationSystem();
     FVector randomLocation = UNavigationSystemV1::GetRandomPointInNavigableRadius(controller, parentLocation, radius);
+    UE_LOG(LogTemp, Display, TEXT("RANDOM POSITION %s"), *randomLocation.ToString());
 
     UBlackboardComponent* blackboard = OwnerComp.GetBlackboardComponent();
     if (!blackboard) {

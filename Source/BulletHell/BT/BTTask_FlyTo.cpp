@@ -45,6 +45,7 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
     {
         FVector pawnLocation = pawn->GetActorLocation();
         FVector directionToPosition = (destination - pawnLocation).GetSafeNormal();
+        UE_LOG(LogTemp, Display, TEXT("dsfsdf %s"), *directionToPosition.ToString());
 
         characterMovementComponent->SetMovementMode(MOVE_Flying);
         characterMovementComponent->Velocity = directionToPosition * characterMovementComponent->GetMaxSpeed();
