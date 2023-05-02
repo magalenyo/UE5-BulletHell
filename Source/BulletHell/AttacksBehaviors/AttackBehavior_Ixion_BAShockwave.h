@@ -22,6 +22,8 @@ public:
 	void SetSpeed(float newSpeed);
 	void SetDamage(float newDamage);
 	void SetHitCooldown(float newHitCooldown);
+	void SetZGrow(bool newZGrow);
+	void SetZGrowSpeed(float newZGrowSpeed);
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -38,6 +40,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float hitCooldown = .3f;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Shockwave")
+	bool zGrow = false;
+
+	UPROPERTY(EditAnywhere, Category="Basic Attack: Shockwave")
+	float zGrowSpeed = 1.0f;
 
 	APawn* playerPawn = nullptr;
 

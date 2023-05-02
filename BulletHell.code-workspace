@@ -6,34 +6,11 @@
 		},
 		{
 			"name": "UE5",
-			"path": "D:\\UE_5.0"
+			"path": "D:\\UE_5.1"
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off",
-		"files.associations": {
-			"*.rh": "cpp",
-			"chrono": "cpp",
-			"functional": "cpp",
-			"optional": "cpp",
-			"system_error": "cpp",
-			"type_traits": "cpp",
-			"xlocmon": "cpp",
-			"xlocnum": "cpp",
-			"xtr1common": "cpp",
-			"__bit_reference": "cpp",
-			"__node_handle": "cpp",
-			"atomic": "cpp",
-			"bitset": "cpp",
-			"cstddef": "cpp",
-			"deque": "cpp",
-			"__memory": "cpp",
-			"limits": "cpp",
-			"locale": "cpp",
-			"ratio": "cpp",
-			"tuple": "cpp",
-			"vector": "cpp"
-		}
+		"typescript.tsc.autoDetect": "off"
 	},
 	"extensions": {
 		"recommendations": [

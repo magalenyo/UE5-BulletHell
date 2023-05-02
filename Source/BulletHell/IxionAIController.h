@@ -10,6 +10,7 @@
 #include "Attacks/Attack_Ixion_BAExit.h"
 #include "Attacks/Attack_Ixion_BAShockwave.h"
 #include "Attacks/Attack_Ixion_HAVortex.h"
+#include "Attacks/Attack_Ixion_HAShockwaveBullets.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -25,7 +26,8 @@ enum class EIxionBasicAttack : uint8
 UENUM(BlueprintType)
 enum class EIxionHeavyAttack : uint8
 {
-	VORTEX UMETA(DisplayName = "Vortex"),
+	VORTEX,
+	SHOCKWAVE_BULLETS,
 	COUNT
 };
 
@@ -66,20 +68,25 @@ protected:
 
 private:
 
-	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	// PHASE 1
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_BAMachineGun* baMachineGun;
 
-	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_BABurst* baBurst;
 
-	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_BAExit* baExit;
 
-	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_BAShockwave* baShockwave;
 
-	UPROPERTY(Instanced, EditAnywhere, Category = Test)
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_HAVortex* haVortex;
+
+	// PHASE 2
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
+	UAttack_Ixion_HAShockwaveBullets* haShockwaveBullets;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;

@@ -4,6 +4,25 @@
 #include "IxionCharacter.h"
 #include "IxionAIController.h"
 
+AIxionCharacter::AIxionCharacter() : Super()
+{
+    projectileSpawnPointTopPhase2 = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point Top Phase 2"));
+	projectileSpawnPointTopPhase2->SetupAttachment(GetMesh());
+
+    projectileSpawnPointBottomPhase2 = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point Bottom Phase 2"));
+	projectileSpawnPointBottomPhase2->SetupAttachment(GetMesh());
+}
+
+const USceneComponent* AIxionCharacter::GetProjectileSpawnPointTop() const
+{
+    return projectileSpawnPointTopPhase2;
+}
+
+const USceneComponent* AIxionCharacter::GetProjectileSpawnPointBottom() const
+{
+    return projectileSpawnPointBottomPhase2;
+}
+
 void AIxionCharacter::HandleDeath()
 {
     if (!IsDead()) {
@@ -38,3 +57,4 @@ void AIxionCharacter::ChangePhase(int newPhase)
 
     // HANDLE UI Change
 }
+

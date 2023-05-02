@@ -37,6 +37,10 @@ void AIxionAIController::BeginPlay()
     if (haVortex) {
         haVortex->SetOwner(this);
     }
+
+    if (haShockwaveBullets) {
+        haShockwaveBullets->SetOwner(this);
+    }
 }
 
 void AIxionAIController::InitializeBlackboardValues()
@@ -110,6 +114,14 @@ void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
 
             if (haVortex) {
                 haVortex->Start();
+            }
+            else{
+                FinishAttack();
+            }
+        break;
+        case EIxionHeavyAttack::SHOCKWAVE_BULLETS:
+            if (haShockwaveBullets) {
+                haShockwaveBullets->Start();
             }
             else{
                 FinishAttack();
