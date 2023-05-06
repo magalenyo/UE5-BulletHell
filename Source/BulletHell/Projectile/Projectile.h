@@ -29,6 +29,7 @@ public:
 	void SetSpeed(float newSpeed);
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 	void SetVelocity(FVector direction);		// Direction should be without applying speed
+	void SetGravity(float newGravity);
 
 private:
 

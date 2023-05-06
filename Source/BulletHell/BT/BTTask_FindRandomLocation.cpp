@@ -20,17 +20,26 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
         return EBTNodeResult::Failed;
     }
 
-    FVector parentLocation = controller->GetPawn()->GetActorLocation();
-    // UNavigationSystem* NavSys = World->GetNavigationSystem();
-    FVector randomLocation = UNavigationSystemV1::GetRandomPointInNavigableRadius(controller, parentLocation, radius);
-    UE_LOG(LogTemp, Display, TEXT("RANDOM POSITION %s"), *randomLocation.ToString());
+    UNavigationSystemV1* navSystem = UNavigationSystemV1::GetNavigationSystem(controller->GetWorld());
+    FNavLocation randomLocation;
+    bool found = navSystem->GetRandomPointInNavigableRadius(
+        controller->GetPawn()->GetActorLocation(), 
+        radius, 
+        randomLocation
+    );
+    
+    if (!found) {
+        return EBTNodeResult::Failed;
+    }
+
+    UE_LOG(LogTemp, Display, TEXT("RANDOM POSITION %s"), *randomLocation.Location.ToString());
 
     UBlackboardComponent* blackboard = OwnerComp.GetBlackboardComponent();
     if (!blackboard) {
         return EBTNodeResult::Failed;
     }
 
-    blackboard->SetValueAsVector(GetSelectedBlackboardKey(), randomLocation + offset);
+    blackboard->SetValueAsVector(GetSelectedBlackboardKey(), randomLocation.Location + offset);
 
     return EBTNodeResult::Succeeded;
 }

@@ -16,10 +16,6 @@ class BULLETHELL_API AShooterCharacter : public ACharacter
 public:
 	AShooterCharacter();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:	
 	virtual void Tick(float DeltaTime) override;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
@@ -38,8 +34,9 @@ public:
 	const float GetMovementSpeed() const;
 
 protected:
+
 	// COMPONENTS
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere);
 	USceneComponent* projectileSpawnPoint;
 
 	// PROPERTIES
@@ -65,6 +62,8 @@ protected:
 	float jumpMultiplier = 1.5f;
 
 	bool isSprinting = false;
+
+	virtual void BeginPlay() override;
 
 	void StartSprint();
 	void StopSprint();

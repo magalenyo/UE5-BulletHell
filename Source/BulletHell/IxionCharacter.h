@@ -21,14 +21,15 @@ public:
 	const USceneComponent* GetProjectileSpawnPointBottom() const;
 	
 protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* projectileSpawnPointTopPhase2;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* projectileSpawnPointBottomPhase2;
+
 	virtual void HandleDeath();
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* projectileSpawnPointTopPhase2;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* projectileSpawnPointBottomPhase2;
 
 	int phase = 1;
 

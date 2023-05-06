@@ -4,8 +4,10 @@
 #include "IxionCharacter.h"
 #include "IxionAIController.h"
 
-AIxionCharacter::AIxionCharacter() : Super()
+AIxionCharacter::AIxionCharacter()
 {
+    // Super();
+
     projectileSpawnPointTopPhase2 = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point Top Phase 2"));
 	projectileSpawnPointTopPhase2->SetupAttachment(GetMesh());
 

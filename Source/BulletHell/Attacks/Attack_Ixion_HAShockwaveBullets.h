@@ -25,7 +25,7 @@ private:
 	float duration = 12.0f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Shockwave")
-	float shockwaveSpeed = 9.0f;
+	float shockwaveSpeed = 7.0f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Shockwave")
 	float shockwaveZSpeed = 16.0f;
@@ -43,16 +43,40 @@ private:
 	TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
-	int bulletsStartPoints = 22;
+	int bulletsStartPoints = 28;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
 	int bulletsPerPoints = 2;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
-	float bulletsSpeed = 800.0f;
+	float bulletsSpeed = 500.0f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
-	float bulletsWaveDelay = .2f;
+	float bulletsWaveDelay = .3f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
+	float bulletsSubwaveMin = .15f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
+	float bulletsSubwaveMax = .25f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
+	float bulletsSubwaveChance = .7f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
+	float burstWaveDelay = .75f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
+	float burstSpeed = 650.0f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
+	float burstGravity = .2f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
+	int burstBullets = 32;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
+	UCurveFloat* burstDecelerationCurve;
 
 	// UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
 	// TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
@@ -62,9 +86,13 @@ private:
 
 	FTimerHandle shockwaveFireRateTimerHandle;
 	FTimerHandle bulletsFireRateTimerHandle;
+	FTimerHandle bulletsSubwaveFireRateTimerHandle;
+	FTimerHandle burstFireRateTimerHandle;
 
 	void BAShockwave();
 
 	void FireShockwave();
 	void FireBulletsWave();
+	void FireBulletsSubwave();
+	void FireBurst();
 };
