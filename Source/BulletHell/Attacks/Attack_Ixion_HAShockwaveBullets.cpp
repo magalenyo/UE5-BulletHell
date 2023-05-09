@@ -20,6 +20,7 @@ void UAttack_Ixion_HAShockwaveBullets::Start()
     projectileSpawnPointTop = character->GetProjectileSpawnPointTop();
     projectileSpawnPointBottom = character->GetProjectileSpawnPointBottom();
 
+    GetWorld()->GetTimerManager().SetTimer(attackTimerHandle, this, &UAttack_Ixion_HAShockwaveBullets::Finish, duration - 0.02f);
     GetWorld()->GetTimerManager().SetTimer(shockwaveFireRateTimerHandle, this, &UAttack_Ixion_HAShockwaveBullets::FireShockwave, duration / shockwaveNumber, true, 0.0f);
     GetWorld()->GetTimerManager().SetTimer(bulletsFireRateTimerHandle, this, &UAttack_Ixion_HAShockwaveBullets::FireBulletsWave, duration / shockwaveNumber, true, bulletsWaveDelay);
     GetWorld()->GetTimerManager().SetTimer(burstFireRateTimerHandle, this, &UAttack_Ixion_HAShockwaveBullets::FireBurst, duration / shockwaveNumber, true, burstWaveDelay);
@@ -27,9 +28,11 @@ void UAttack_Ixion_HAShockwaveBullets::Start()
 
 void UAttack_Ixion_HAShockwaveBullets::Finish()
 {
+    GetWorld()->GetTimerManager().ClearTimer(attackTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(shockwaveFireRateTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(bulletsFireRateTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(bulletsSubwaveFireRateTimerHandle);
+    GetWorld()->GetTimerManager().ClearTimer(burstFireRateTimerHandle);
 
     AIxionAIController* ixion = Cast<AIxionAIController>(GetOwner());
     if (ixion) {

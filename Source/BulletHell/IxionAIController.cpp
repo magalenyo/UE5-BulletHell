@@ -41,6 +41,10 @@ void AIxionAIController::BeginPlay()
     if (haShockwaveBullets) {
         haShockwaveBullets->SetOwner(this);
     }
+
+    if (haDescendRush) {
+        haDescendRush->SetOwner(this);
+    }
 }
 
 void AIxionAIController::InitializeBlackboardValues()
@@ -122,6 +126,14 @@ void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
         case EIxionHeavyAttack::SHOCKWAVE_BULLETS:
             if (haShockwaveBullets) {
                 haShockwaveBullets->Start();
+            }
+            else{
+                FinishAttack();
+            }
+        break;
+        case EIxionHeavyAttack::DESCEND_RUSH:
+            if (haDescendRush) {
+                haDescendRush->Start();
             }
             else{
                 FinishAttack();

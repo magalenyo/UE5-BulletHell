@@ -73,7 +73,7 @@ private:
 	float burstGravity = .2f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
-	int burstBullets = 32;
+	int burstBullets = 40;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
 	UCurveFloat* burstDecelerationCurve;
@@ -84,6 +84,7 @@ private:
 	const USceneComponent* projectileSpawnPointTop;
 	const USceneComponent* projectileSpawnPointBottom;
 
+	FTimerHandle attackTimerHandle;
 	FTimerHandle shockwaveFireRateTimerHandle;
 	FTimerHandle bulletsFireRateTimerHandle;
 	FTimerHandle bulletsSubwaveFireRateTimerHandle;

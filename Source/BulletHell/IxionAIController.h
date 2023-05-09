@@ -11,6 +11,7 @@
 #include "Attacks/Attack_Ixion_BAShockwave.h"
 #include "Attacks/Attack_Ixion_HAVortex.h"
 #include "Attacks/Attack_Ixion_HAShockwaveBullets.h"
+#include "Attacks/Attack_Ixion_HADescendRush.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -28,6 +29,7 @@ enum class EIxionHeavyAttack : uint8
 {
 	VORTEX,
 	SHOCKWAVE_BULLETS,
+	DESCEND_RUSH,
 	COUNT
 };
 
@@ -87,6 +89,9 @@ private:
 	// PHASE 2
 	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_HAShockwaveBullets* haShockwaveBullets;
+
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
+	UAttack_Ixion_HADescendRush* haDescendRush;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;
