@@ -35,4 +35,5 @@ private:
 
 	AActor* spline;
 
+	class UComponentFollowSpline* followSplineComponent
 };

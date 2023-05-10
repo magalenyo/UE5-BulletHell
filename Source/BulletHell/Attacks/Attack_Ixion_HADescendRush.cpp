@@ -21,7 +21,7 @@ void UAttack_Ixion_HADescendRush::Start()
         return;
     }
 
-    UComponentFollowSpline* followSplineComponent = Cast<UComponentFollowSpline>(GetOwner()->GetPawn()->GetComponentByClass(UComponentFollowSpline::StaticClass()));
+    followSplineComponent = Cast<UComponentFollowSpline>(GetOwner()->GetPawn()->GetComponentByClass(UComponentFollowSpline::StaticClass()));
     if (!followSplineComponent) {
         Finish();
         return;
@@ -30,12 +30,12 @@ void UAttack_Ixion_HADescendRush::Start()
     followSplineComponent->SetSpline(splineComponent, accelerationCurve, duration, drawDebug);
     followSplineComponent->StartSpline();
     followSplineComponent->onSplineFinishedDelegate.BindUFunction(this, FName("Finish"));
-    // followSplineComponent->onSplineFinishedDelegate.BindStatic(this, &UAttack_Ixion_HADescendRush::Finish);
-    // followSplineComponent->onSplineFinishedDelegate.BindDynamic(this, &UAttack_Ixion_HADescendRush::Finish);
 }
 
 void UAttack_Ixion_HADescendRush::Finish()
 {
+    followSplineComponent->onSplineFinishedDelegate.Unbind();
+
     UE_LOG(LogTemp, Display, TEXT("DESTROYING BP"));
     if (spline) {
         spline->Destroy();
