@@ -64,6 +64,13 @@ void UComponentFollowSpline::SetSpline(USplineComponent* newSpline, UCurveFloat*
 	}
 }
 
+void UComponentFollowSpline::AddEvent(float time, FOnTimelineEvent event)
+{
+	if (timeline) {
+		timeline->AddEvent(time, event);
+	}
+}
+
 void UComponentFollowSpline::OnAccelerationTimelineUpdate(float Alpha)
 {
 	if (!spline) {
@@ -84,4 +91,6 @@ void UComponentFollowSpline::OnAccelerationTimelineFinished()
 {
 	UE_LOG(LogTemp, Display, TEXT("Your FINISHED"));
 	onSplineFinishedDelegate.ExecuteIfBound();
+	// TODO: Should clear timeline events?
+	// TODO: Should clear delegates?
 }

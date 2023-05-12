@@ -4,6 +4,7 @@
 #include "Attacks/Attack_Ixion_HADescendRush.h"
 #include "IxionAIController.h"
 #include "Components/SplineComponent.h"
+#include "Components/TimelineComponent.h"
 #include "ComponentFollowSpline.h"
 
 void UAttack_Ixion_HADescendRush::Start()
@@ -27,16 +28,19 @@ void UAttack_Ixion_HADescendRush::Start()
         return;
     }
 
+    FOnTimelineEvent onPerformAttack;
+	onPerformAttack.BindUFunction(this, FName("FireVortex"));
+
     followSplineComponent->SetSpline(splineComponent, accelerationCurve, duration, drawDebug);
     followSplineComponent->StartSpline();
     followSplineComponent->onSplineFinishedDelegate.BindUFunction(this, FName("Finish"));
+    followSplineComponent->AddEvent(attackPoint * duration, onPerformAttack);
 }
 
 void UAttack_Ixion_HADescendRush::Finish()
 {
     followSplineComponent->onSplineFinishedDelegate.Unbind();
 
-    UE_LOG(LogTemp, Display, TEXT("DESTROYING BP"));
     if (spline) {
         spline->Destroy();
     }
@@ -46,4 +50,9 @@ void UAttack_Ixion_HADescendRush::Finish()
         ixion->FinishAttack();
     }
     ixion->FinishAttack(false);
+}
+
+void UAttack_Ixion_HADescendRush::FireVortex()
+{
+    UE_LOG(LogTemp, Display, TEXT("holaaaa"));
 }

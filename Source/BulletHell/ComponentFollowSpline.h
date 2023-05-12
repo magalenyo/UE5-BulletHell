@@ -8,6 +8,7 @@
 
 class USplineComponent;
 class UTimelineComponent;
+class FOnTimelineEvent;
 
 DECLARE_DELEGATE(FOnSplineFinishedSignature);
 
@@ -31,6 +32,7 @@ public:
 	void StartSpline();
 	void SetSpline(USplineComponent* newSpline, UCurveFloat* newAccelerationCurve);
 	void SetSpline(USplineComponent* newSpline, UCurveFloat* newAccelerationCurve, float newDuration, bool newDrawDebug = false);
+	void AddEvent(float time, FOnTimelineEvent event);
 
 private:
 	UCurveFloat* accelerationCurve;

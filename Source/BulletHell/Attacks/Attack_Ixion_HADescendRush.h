@@ -20,12 +20,17 @@ public:
 	UFUNCTION()
 	virtual void Finish() override;
 
+	UFUNCTION()
+	void FireVortex();
 private:
 	UPROPERTY(EditAnywhere)
 	float duration = 8.0f;
 
 	UPROPERTY(EditAnywhere)
 	bool drawDebug = false;
+
+	UPROPERTY(EditAnywhere)
+	float attackPoint = .15f;
 
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* accelerationCurve;
@@ -35,5 +40,6 @@ private:
 
 	AActor* spline;
 
-	class UComponentFollowSpline* followSplineComponent
+	class UComponentFollowSpline* followSplineComponent;
+
 };
