@@ -46,16 +46,28 @@ private:
 	int wavesPerPointVortex = 24;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float speedVortexAttack = 1500.0f;
+	float bulletSpeedVortex = 1800.0f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
+	float bulletDuration = 3.5f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float durationVortex = .85f;
 
-	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Vortex")
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float durationExpanseVortex = .55f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float rotationSpeedVortex = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Shockwave")
+	TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
+
+	UPROPERTY(EditAnywhere, Category="Heavy Attack: Shockwave")
+	float shockwaveDuration = 4.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Shockwave")
+	float shockwaveMovementSpeed = 650.0f;
 
 	AActor* spline;
 
@@ -71,6 +83,7 @@ private:
 	std::vector<class AProjectile*> projectilesVortex;
 
 	void FireVortex();
+	void FireShockwaves();
 
 	void RepositionVortexProjectiles();
 };

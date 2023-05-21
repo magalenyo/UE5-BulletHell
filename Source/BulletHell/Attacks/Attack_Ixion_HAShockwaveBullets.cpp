@@ -48,6 +48,7 @@ void UAttack_Ixion_HAShockwaveBullets::FireShockwave()
         if (shockwave) {
             shockwave->SetLifeSpan(shockwaveDuration);
             shockwave->SetSpeed(shockwaveSpeed);
+            shockwave->SetScaleGrow(true);
             shockwave->SetZGrow(true);
             shockwave->SetZGrowSpeed(shockwaveZSpeed);
         }

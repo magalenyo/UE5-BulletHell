@@ -8,6 +8,7 @@
 #include "ComponentFollowSpline.h"
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/Projectile.h"
+#include "AttacksBehaviors/AttackBehavior_Ixion_BAShockwave.h"
 
 void UAttack_Ixion_HADescendRush::Start()
 {
@@ -35,7 +36,7 @@ void UAttack_Ixion_HADescendRush::Start()
 
     followSplineComponent->SetSpline(splineComponent, accelerationCurve, duration, drawDebug);
     followSplineComponent->StartSpline();
-    followSplineComponent->onSplineFinishedDelegate.BindUFunction(this, FName("Finish"));
+    //followSplineComponent->onSplineFinishedDelegate.BindUFunction(this, FName("Finish"));
     followSplineComponent->AddEvent(attackPoint * duration, onPerformAttack);
     projectilesVortex.resize(startPointsPerWaveVortex * wavesPerPointVortex);
 
@@ -66,6 +67,7 @@ void UAttack_Ixion_HADescendRush::OnPerformAttack()
     
     UE_LOG(LogTemp, Display, TEXT("holaaaa %s"), *targetLocation.ToString());
     FireVortex();
+    FireShockwaves();
 }
 
 // void UAttack_Ixion_HADescendRush::FireVortex()
@@ -114,10 +116,11 @@ void UAttack_Ixion_HADescendRush::FireVortex()
             FVector velocityOutwards = pointRotation.Vector();
             FVector finalVelocity = FVector::CrossProduct(velocityOutwards, rotationTowardsPlayer.Vector());
 
-            projectile->SetSpeed(speedVortexAttack);
+            projectile->SetSpeed(bulletSpeedVortex);
             UGameplayStatics::FinishSpawningActor(projectile, transform);
-            projectile->SetVelocity(finalVelocity * speedVortexAttack);
+            projectile->SetVelocity(finalVelocity * bulletSpeedVortex);
             projectile->SetOwner(GetOwner());
+            projectile->SetLifeSpan(bulletDuration);
         }
         projectilesVortex[i + (currentWaveVortex * startPointsPerWaveVortex)] = projectile;
     }
@@ -128,7 +131,7 @@ void UAttack_Ixion_HADescendRush::FireVortex()
     float timeToReposition = timePerWave * currentWaveVortex;
 
     if (currentWaveVortex == 0) {
-        //GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &UAttack_Ixion_HADescendRush::RepositionVortexProjectiles, 0.05, false);
+        //GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &UAttack_Ixion_HADescendRush::RepositionVortexProjectiles, 0.05, false);º
         RepositionVortexProjectiles();
     }
 
@@ -136,6 +139,38 @@ void UAttack_Ixion_HADescendRush::FireVortex()
     if (currentWaveVortex != wavesPerPointVortex) {
         float nextTime = durationVortex / wavesPerPointVortex;
         GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, this, &UAttack_Ixion_HADescendRush::FireVortex, nextTime, true);
+    }
+}
+
+void UAttack_Ixion_HADescendRush::FireShockwaves()
+{
+    if (shockwaveClass) {
+        USceneComponent* targetMesh = Cast<USceneComponent>(spline->GetDefaultSubobjectByName("ShockwaveSpawnPoint"));
+
+        if (!targetMesh) {
+            Finish();
+        }
+
+        FVector spawnPoint = targetMesh->GetComponentLocation();
+        FRotator rotation = GetOwner()->LookAt(targetLocation, fireLocation);     // TODO: Should get Actor's Rotation but that won't work for now
+
+        AAttackBehavior_Ixion_BAShockwave* shockwave1 = GetWorld()->SpawnActor<AAttackBehavior_Ixion_BAShockwave>(shockwaveClass);
+        if (shockwave1) {
+            shockwave1->SetLifeSpan(shockwaveDuration);
+            shockwave1->SetMove(true);
+            shockwave1->SetMovementSpeed(shockwaveMovementSpeed);
+            shockwave1->SetActorLocation(spawnPoint);
+            shockwave1->SetActorRotation(rotation);
+        }
+
+        AAttackBehavior_Ixion_BAShockwave* shockwave2 = GetWorld()->SpawnActor<AAttackBehavior_Ixion_BAShockwave>(shockwaveClass);
+        if (shockwave2) {
+            shockwave2->SetLifeSpan(shockwaveDuration);
+            shockwave2->SetMove(true);
+            shockwave2->SetMovementSpeed(shockwaveMovementSpeed);
+            shockwave2->SetActorLocation(spawnPoint);
+            shockwave2->SetActorRotation(FRotator(rotation.Pitch, rotation.Yaw + 180, rotation.Roll));
+        }
     }
 }
 

@@ -90,8 +90,6 @@ private:
 	FTimerHandle bulletsSubwaveFireRateTimerHandle;
 	FTimerHandle burstFireRateTimerHandle;
 
-	void BAShockwave();
-
 	void FireShockwave();
 	void FireBulletsWave();
 	void FireBulletsSubwave();

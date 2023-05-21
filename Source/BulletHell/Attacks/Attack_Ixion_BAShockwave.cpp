@@ -13,6 +13,7 @@ void UAttack_Ixion_BAShockwave::Start()
         if (shockwave) {
             shockwave->SetLifeSpan(duration);
             shockwave->SetSpeed(speed);
+            shockwave->SetScaleGrow(true);
         }
     }
     Finish();
