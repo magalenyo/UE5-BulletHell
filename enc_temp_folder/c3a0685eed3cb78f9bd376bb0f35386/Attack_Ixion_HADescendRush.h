@@ -52,7 +52,7 @@ private:
 	float durationVortex = .85f;
 
 	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Vortex")
-	float durationExpanseVortex = .55f;
+	float durationExpanseVortex = .45f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float rotationSpeedVortex = 2.0f;
