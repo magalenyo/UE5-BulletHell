@@ -46,7 +46,7 @@ private:
 	int wavesPerPointVortex = 24;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float bulletSpeedVortex = 1800.0f;
+	float bulletSpeedVortex = 2000.0f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float bulletDuration = 3.5f;
@@ -55,7 +55,7 @@ private:
 	float durationVortex = .85f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
-	float durationExpanseVortex = .55f;
+	float durationExpanseVortex = .65f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: Vortex")
 	float rotationSpeedVortex = 2.0f;

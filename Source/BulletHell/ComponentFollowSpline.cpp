@@ -91,6 +91,10 @@ void UComponentFollowSpline::OnAccelerationTimelineFinished()
 {
 	UE_LOG(LogTemp, Display, TEXT("Your FINISHED"));
 	onSplineFinishedDelegate.ExecuteIfBound();
+	timeline->DestroyComponent();
+	accelerationCurve = nullptr;
+	spline = nullptr;
+	duration = 0.0f;
 	// TODO: Should clear timeline events?
 	// TODO: Should clear delegates?
 }

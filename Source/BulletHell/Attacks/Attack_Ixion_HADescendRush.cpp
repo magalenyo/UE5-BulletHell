@@ -45,6 +45,9 @@ void UAttack_Ixion_HADescendRush::Start()
 void UAttack_Ixion_HADescendRush::Finish()
 {
     followSplineComponent->onSplineFinishedDelegate.Unbind();
+    projectilesVortex.clear();
+    currentWaveVortex = 0;
+    currentWaveVortexReposition = 0;
 
     if (spline) {
         spline->Destroy();
@@ -65,37 +68,9 @@ void UAttack_Ixion_HADescendRush::OnPerformAttack()
     targetLocation = targetMesh->GetComponentLocation();
     targetLocation.Z = fireLocation.Z;
     
-    UE_LOG(LogTemp, Display, TEXT("holaaaa %s"), *targetLocation.ToString());
     FireVortex();
     FireShockwaves();
 }
-
-// void UAttack_Ixion_HADescendRush::FireVortex()
-// {
-//     UE_LOG(LogTemp, Display, TEXT("holaaaa"));
-//     USceneComponent* targetMesh = Cast<USceneComponent>(spline->GetDefaultSubobjectByName("TargetLocation"));
-    
-//     if (!targetMesh) {
-//         return;
-//     }
-
-//     FVector targetLocation = targetMesh->GetComponentLocation();
-//     FVector location = GetPawn()->GetActorLocation();
-
-//     FRotator rotationTowardsTarget = GetOwner()->LookAt(location, targetLocation);
-
-//     FTransform transform = FTransform(FRotator(0, rotationTowardsTarget.Yaw, rotationTowardsTarget.Roll), location);
-//     AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(GetOwner()->GetProjectileClass(), transform);
-//     if (projectile)
-//     {
-//         UGameplayStatics::FinishSpawningActor(projectile, transform);
-        
-//         // projectile->SetSpeed(speedBurstAttack);
-//         projectile->SetOwner(GetOwner());
-//     }
-
-//     // GetWorld()->GetTimerManager().ClearTimer(fireRateTimerHandle);
-// }
 
 void UAttack_Ixion_HADescendRush::FireVortex() 
 {
@@ -178,7 +153,7 @@ void UAttack_Ixion_HADescendRush::RepositionVortexProjectiles()
 {
     if (currentWaveVortexReposition == wavesPerPointVortex) {
         GetWorld()->GetTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
-        //Finish();
+        Finish();
         return;
     }
 
@@ -186,12 +161,9 @@ void UAttack_Ixion_HADescendRush::RepositionVortexProjectiles()
     {
         AProjectile* projectile = projectilesVortex[i];
         if (projectile) {
-            FVector direction = FVector::CrossProduct(projectile->GetVelocity().GetSafeNormal(), (targetLocation - projectile->GetActorLocation()).GetSafeNormal());
+            FVector direction = FVector::CrossProduct(projectile->GetVelocity().GetSafeNormal(), (targetLocation - projectile->GetActorLocation()).GetSafeNormal());            //TODO: Should follow a parallel from origin to target, but not currently working, so a far destination will do for now
             FVector directionToPlayer = (targetLocation - projectile->GetActorLocation()).GetSafeNormal();
             projectile->SetVelocity(directionToPlayer * projectile->GetProjectileSpeed());
-
-            //FVector direction = (targetLocation - fireLocation).GetSafeNormal();
-            //projectile->SetVelocity((projectile->GetActorLocation().GetSafeNormal() * direction).GetSafeNormal() * projectile->GetProjectileSpeed());
         }
     }
     float timePerWave = durationExpanseVortex / wavesPerPointVortex;
