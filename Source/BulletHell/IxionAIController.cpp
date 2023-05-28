@@ -45,12 +45,23 @@ void AIxionAIController::BeginPlay()
     if (haDescendRush) {
         haDescendRush->SetOwner(this);
     }
+
+    if (baSweep) {
+        baSweep->SetOwner(this);
+    }
 }
 
 void AIxionAIController::InitializeBlackboardValues()
 {
     // GetBlackboardComponent()->SetValueAsInt(TEXT("Phase"), 1);
+    UBlackboardComponent* blackboard = GetBlackboardComponent();
+    if (!blackboard) {
+        return;
+    }
+
     SetPhase(1);
+    blackboard->SetValueAsBool(TEXT("IsFirstTime"), true);
+    blackboard->SetValueAsBool(TEXT("IsFirstTimePhase2"), true);
 }
 
 void AIxionAIController::Tick(float DeltaSeconds)
@@ -99,6 +110,16 @@ void AIxionAIController::StartBasicAttack(const EIxionBasicAttack attack)
                 baShockwave->Start();
             }
             else{
+                FinishAttack();
+            }
+        break;
+        case EIxionBasicAttack::SWEEP:
+            //mustLookAtPlayer = true;
+            LookAtPlayer();
+            if (baSweep) {
+                baSweep->Start();
+            }
+            else {
                 FinishAttack();
             }
         break;

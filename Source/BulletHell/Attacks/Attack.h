@@ -28,8 +28,9 @@ public:
 
 protected:
 
-	AShooterAIController* GetOwner();
-	APawn* GetPawn();
+	AShooterAIController* GetOwner() const;
+	APawn* GetPawn() const;
+	const USceneComponent* GetDefaultSpawnPoint() const;
 
 private:
 	AShooterAIController* owner;

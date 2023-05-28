@@ -32,7 +32,5 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Shockwave")
 	TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
-
-	FTimerHandle fireRateTimerHandle;
-	void BAShockwave();
+	
 };

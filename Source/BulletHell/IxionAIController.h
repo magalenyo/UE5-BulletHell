@@ -12,6 +12,7 @@
 #include "Attacks/Attack_Ixion_HAVortex.h"
 #include "Attacks/Attack_Ixion_HAShockwaveBullets.h"
 #include "Attacks/Attack_Ixion_HADescendRush.h"
+#include "Attacks/Attack_Ixion_BASweep.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -21,6 +22,7 @@ enum class EIxionBasicAttack : uint8
 	MACHINE_GUN,
 	BURST,
 	SHOCKWAVE,
+	SWEEP,
 	COUNT
 };
 
@@ -53,10 +55,6 @@ public:
 	void StartBasicAttack(const EIxionBasicAttack attack);
 	void StartHeavyAttack(const EIxionHeavyAttack attack);
 	void AttackDefault();
-	void BAExit();
-	void BAMachineGun();
-	void BABurst();
-	void HAVortex();
 	void FinishAttack(bool isBasicAttack = true);
 	void SetPhase(int newPhase);
 
@@ -92,6 +90,9 @@ private:
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_HADescendRush* haDescendRush;
+
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
+	UAttack_Ixion_BASweep* baSweep;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;
