@@ -30,6 +30,8 @@ public:
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 	void SetVelocity(FVector direction);		// Direction should be without applying speed
 	void SetGravity(float newGravity);
+	void SetDelayedActivation(float delay);
+
 
 private:
 
@@ -73,4 +75,7 @@ private:
 	UFUNCTION()
 	void OnDecelerationTimelineUpdate(float Alpha);
 
+	// TODO: functions to be reviewed (components didn't seem to be disabled)
+	void EnableActor();
+	void DisableActor();
 };

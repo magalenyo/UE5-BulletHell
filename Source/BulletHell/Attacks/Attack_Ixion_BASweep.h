@@ -25,7 +25,7 @@ private:
 	float durationPerWave = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
-	int bulletsPerWave = 40;
+	int bulletsPerWave = 32;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
 	int waves = 4;
@@ -37,9 +37,6 @@ private:
 	float bulletSpeed = 1200.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
-	float amplitude = 8.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
 	float horizontalAngle = 75.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
@@ -47,6 +44,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
 	FRotator angleOffset = FRotator::ZeroRotator;
+
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
+	float extraBulletOffsetDegree = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Sweep")
+	float extraBulletTime = .12f;
 
 	float nextTime = 0;
 	float horizontalAnglePerBullet = 0;

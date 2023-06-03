@@ -40,6 +40,7 @@ void UAttack_Ixion_BASweep::BASweep()
 	FRotator currentRotation = GetPawn()->GetActorRotation();
 	FVector playerPosition = playerPawn->GetActorLocation();
 
+	// Straight lines
 	float horizontalRotationAngle = direction > 0 ? -(horizontalAngle / 2) + horizontalAnglePerBullet * currentProjectile
 										           : (horizontalAngle / 2) - horizontalAnglePerBullet * currentProjectile;
 
@@ -54,13 +55,43 @@ void UAttack_Ixion_BASweep::BASweep()
 		}
 	}
 
-	// Random line
-	/*AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(GetOwner()->GetProjectileClass(), transform);
+	// Extra line
+	float verticalRotationHalfway = verticalAnglePerBullet / 2;
+	FTransform transform = FTransform(currentRotation + FRotator(verticalRotationHalfway, horizontalRotationAngle, 0) + angleOffset, spawnPoint);
+	AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(GetOwner()->GetProjectileClass(), transform);
 	if (projectile) {
 		UGameplayStatics::FinishSpawningActor(projectile, transform);
 		projectile->SetSpeed(bulletSpeed);
 		projectile->SetOwner(GetOwner());
-	}*/
+	}
+
+	// Random bullets
+	int extraBullets = FMath::RandRange(0, 3);
+	for (int i = 0; i < extraBullets; ++i) {
+		float randomX = FMath::RandRange(-extraBulletOffsetDegree, extraBulletOffsetDegree);
+		float randomY = FMath::RandRange(-extraBulletOffsetDegree, extraBulletOffsetDegree);
+		float randomZ = FMath::RandRange(-extraBulletOffsetDegree, extraBulletOffsetDegree);
+		FTransform transformRandom = FTransform(currentRotation + FRotator(verticalRotationHalfway, horizontalRotationAngle, 0) + FRotator(randomX, randomY, randomZ) + angleOffset, spawnPoint);
+
+		FTimerHandle localTimerHandle;
+		FTimerManager& timerManager = GetWorld()->GetTimerManager();
+		FTimerDelegate timerDelegate;
+		timerDelegate.BindLambda([&, transformRandom]()
+			{
+				AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(GetOwner()->GetProjectileClass(), transformRandom);
+				if (projectile) {
+					UGameplayStatics::FinishSpawningActor(projectile, transformRandom);
+					projectile->SetSpeed(bulletSpeed);
+					projectile->SetOwner(GetOwner());
+				}
+
+				timerManager.ClearTimer(localTimerHandle);
+			});
+
+		float nextTimeExtraBullet = FMath::RandRange(0.007f, extraBulletTime);
+		timerManager.SetTimer(localTimerHandle, timerDelegate, nextTimeExtraBullet, false);
+	}
+
 
 	if (currentProjectile == bulletsPerWave) {
 		if (currentWave == waves) {

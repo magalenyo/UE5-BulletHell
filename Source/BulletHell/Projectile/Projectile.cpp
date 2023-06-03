@@ -125,6 +125,20 @@ void AProjectile::SetGravity(float newGravity)
     projectileMovementComponent->ProjectileGravityScale = newGravity;
 }
 
+void AProjectile::SetDelayedActivation(float delay)
+{
+    DisableActor();
+    FTimerHandle localTimerHandle;
+    FTimerManager& timerManager = GetWorld()->GetTimerManager();
+    FTimerDelegate timerDelegate;
+    timerDelegate.BindLambda([&]()
+    {
+        EnableActor();
+        timerManager.ClearTimer(localTimerHandle);
+    });
+    timerManager.SetTimer(localTimerHandle, timerDelegate, delay, false);
+}
+
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     if (hitParticles) {
@@ -142,5 +156,19 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 void AProjectile::OnDecelerationTimelineUpdate(float Alpha)
 {
     SetSpeed(initialDecelerationSpeed * Alpha);
+}
+
+void AProjectile::EnableActor()
+{
+    SetActorHiddenInGame(false);
+    SetActorEnableCollision(true);
+    SetActorTickEnabled(true);
+}
+
+void AProjectile::DisableActor()
+{
+    SetActorHiddenInGame(true);
+    SetActorEnableCollision(false);
+    SetActorTickEnabled(false);
 }
 

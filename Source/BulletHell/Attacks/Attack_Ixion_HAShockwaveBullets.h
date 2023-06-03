@@ -43,13 +43,13 @@ private:
 	TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
-	int bulletsStartPoints = 28;
+	int bulletsStartPoints = 36;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
 	int bulletsPerPoints = 2;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
-	float bulletsSpeed = 500.0f;
+	float bulletsSpeed = 700.0f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
 	float bulletsWaveDelay = .3f;
@@ -73,7 +73,7 @@ private:
 	float burstGravity = .2f;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
-	int burstBullets = 40;
+	int burstBullets = 60;
 
 	UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Burst")
 	UCurveFloat* burstDecelerationCurve;
