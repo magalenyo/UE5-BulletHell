@@ -27,20 +27,33 @@ private:
 	float bulletsDuration = 10.0f;
 
 	UPROPERTY(EditAnywhere)
-	int bulletsStartPoints = 8;
-
-	UPROPERTY(EditAnywhere)
-	int bulletsPerStartPoint = 8;
+	int waves = 6;
 	
 	UPROPERTY(EditAnywhere)
-	float bulletsConeAngle = 90.0f;
+	float bulletsConeAngle = 110.0f;
 
 	UPROPERTY(EditAnywhere)
-	float bulletsSpeed = 1200.0f;
+	int bulletsPerSide = 24;
 
 	UPROPERTY(EditAnywhere)
-	float bulletsHomingMagnitude = 1400.0f;
+	int bulletsPerWave = 12;
 
+	UPROPERTY(EditAnywhere)
+	float bulletsSpeed = 1400.0f;
+
+	UPROPERTY(EditAnywhere)
+	float bulletsHomingMagnitude = 2200.0f;
+
+	UPROPERTY(EditAnywhere)
+	float bulletsMinTimeWave = .03f;
+
+	UPROPERTY(EditAnywhere)
+	float bulletsMaxTimeWave = .06f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> homingProjectileClass;
+
+	int currentWave = 0;
 	FTimerHandle fireRateTimerHandle;
 
 	void FireBullets();
