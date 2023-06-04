@@ -49,6 +49,10 @@ void AIxionAIController::BeginPlay()
     if (baSweep) {
         baSweep->SetOwner(this);
     }
+
+    if (haHomingAndLaser) {
+        haHomingAndLaser->SetOwner(this);
+    }
 }
 
 void AIxionAIController::InitializeBlackboardValues()
@@ -157,6 +161,15 @@ void AIxionAIController::StartHeavyAttack(const EIxionHeavyAttack attack)
                 haDescendRush->Start();
             }
             else{
+                FinishAttack();
+            }
+        break;
+        case EIxionHeavyAttack::HOMING_AND_LASER:
+            LookAtPlayerSameHeight();
+            if (haHomingAndLaser) {
+                haHomingAndLaser->Start();
+            }
+            else {
                 FinishAttack();
             }
         break;

@@ -30,8 +30,10 @@ public:
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 	void SetVelocity(FVector direction);		// Direction should be without applying speed
 	void SetGravity(float newGravity);
+	void SetHoming(AActor* target);
+	void SetHoming(AActor* target, float newHomingMagnitude);
+	void SetHomingMagnitude(float newHomingMagnitude);
 	void SetDelayedActivation(float delay);
-
 
 private:
 

@@ -125,6 +125,27 @@ void AProjectile::SetGravity(float newGravity)
     projectileMovementComponent->ProjectileGravityScale = newGravity;
 }
 
+void AProjectile::SetHoming(AActor* target)
+{
+    if (!target) {
+        return;
+    }
+
+    projectileMovementComponent->bIsHomingProjectile = true;
+    projectileMovementComponent->HomingTargetComponent = target->GetRootComponent();
+}
+
+void AProjectile::SetHoming(AActor* target, float newHomingMagnitude)
+{
+    SetHoming(target);
+    SetHomingMagnitude(newHomingMagnitude);
+}
+
+void AProjectile::SetHomingMagnitude(float newHomingMagnitude)
+{
+    projectileMovementComponent->HomingAccelerationMagnitude = newHomingMagnitude;
+}
+
 void AProjectile::SetDelayedActivation(float delay)
 {
     DisableActor();

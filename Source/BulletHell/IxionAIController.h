@@ -9,10 +9,11 @@
 #include "Attacks/Attack_Ixion_BABurst.h"
 #include "Attacks/Attack_Ixion_BAExit.h"
 #include "Attacks/Attack_Ixion_BAShockwave.h"
+#include "Attacks/Attack_Ixion_BASweep.h"
 #include "Attacks/Attack_Ixion_HAVortex.h"
 #include "Attacks/Attack_Ixion_HAShockwaveBullets.h"
 #include "Attacks/Attack_Ixion_HADescendRush.h"
-#include "Attacks/Attack_Ixion_BASweep.h"
+#include "Attacks/Attack_Ixion_HAHomingAndLaser.h"
 #include "IxionAIController.generated.h"
 
 UENUM(BlueprintType)
@@ -32,6 +33,7 @@ enum class EIxionHeavyAttack : uint8
 	VORTEX,
 	SHOCKWAVE_BULLETS,
 	DESCEND_RUSH,
+	HOMING_AND_LASER,
 	COUNT
 };
 
@@ -86,13 +88,16 @@ private:
 
 	// PHASE 2
 	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
+	UAttack_Ixion_BASweep* baSweep;
+
+	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_HAShockwaveBullets* haShockwaveBullets;
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
 	UAttack_Ixion_HADescendRush* haDescendRush;
 
 	UPROPERTY(Instanced, EditAnywhere, Category = Attacks)
-	UAttack_Ixion_BASweep* baSweep;
+	UAttack_Ixion_HAHomingAndLaser* haHomingAndLaser;
 
 	// ATTRIBUTES 
 	bool isAttacking = false;

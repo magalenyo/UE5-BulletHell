@@ -50,6 +50,16 @@ void AShooterAIController::LookAtPlayer()
     GetPawn()->SetActorRotation(LookAt(playerPawn->GetActorLocation()));
 }
 
+void AShooterAIController::LookAtPlayerSameHeight()
+{
+    if (!playerPawn) {
+        return;
+    }
+    FVector target = playerPawn->GetActorLocation();
+    target.Z = GetPawn()->GetActorLocation().Z;
+    GetPawn()->SetActorRotation(LookAt(target));
+}
+
 void AShooterAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
