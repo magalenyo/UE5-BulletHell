@@ -24,13 +24,19 @@ private:
 	float bulletsStartTime = .8f;
 
 	UPROPERTY(EditAnywhere)
-	float bulletsDuration = 10.0f;
+	float bulletsDuration = 5.0f;
 
 	UPROPERTY(EditAnywhere)
 	int waves = 6;
 	
 	UPROPERTY(EditAnywhere)
 	float bulletsConeAngle = 110.0f;
+
+	UPROPERTY(EditAnywhere)
+	float bulletsConeAngleVertical = 35;
+
+	UPROPERTY(EditAnywhere)
+	int bulletsVertical = 2;
 
 	UPROPERTY(EditAnywhere)
 	int bulletsPerSide = 24;
@@ -50,8 +56,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float bulletsMaxTimeWave = .06f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AProjectile> homingProjectileClass;
+
+	UPROPERTY(EditAnywhere)
+	FRotator test;
+
 
 	int currentWave = 0;
 	FTimerHandle fireRateTimerHandle;

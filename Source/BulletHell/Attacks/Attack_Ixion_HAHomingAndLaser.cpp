@@ -35,7 +35,7 @@ void UAttack_Ixion_HAHomingAndLaser::FireBullets()
     for (int i = 0; i < 2; ++i) {
         float sideRotation = i == 0 ? 90 : -90;
         for (int j = 0; j < bulletsPerWave; ++j) {
-            float randomAngle = FMath::RandRange(-halfRange, halfRange);
+            //float randomAngle = FMath::RandRange(-halfRange, halfRange);
             FTransform transform = FTransform(rotation + FRotator(FMath::RandRange(-halfRange, halfRange), sideRotation, 0), location);
 
             AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(homingProjectileClass, transform);
@@ -49,6 +49,21 @@ void UAttack_Ixion_HAHomingAndLaser::FireBullets()
             }
         }
     }
+
+    for (int i = 0; i < bulletsVertical; ++i) {
+        FTransform transform = FTransform(rotation + FRotator(90 + FMath::RandRange(-bulletsConeAngleVertical, bulletsConeAngleVertical), 90, 90), location);
+
+        AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(homingProjectileClass, transform);
+        if (projectile) {
+            projectile->SetSpeed(FMath::RandRange(bulletsSpeed, bulletsSpeed * 1.1f));
+            UGameplayStatics::FinishSpawningActor(projectile, transform);
+            projectile->SetOwner(GetOwner());
+            projectile->SetLifeSpan(bulletsDuration);
+            projectile->SetHoming(GetOwner()->GetPlayerPawn());
+            projectile->SetHomingMagnitude(bulletsHomingMagnitude);
+        }
+    }
+    
 
     currentWave++;
     if (currentWave == waves) {
