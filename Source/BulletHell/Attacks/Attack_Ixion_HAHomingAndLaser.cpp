@@ -4,23 +4,36 @@
 #include "Attacks/Attack_Ixion_HAHomingAndLaser.h"
 #include "Kismet/GameplayStatics.h"
 #include "IxionAIController.h"
+#include "AttacksBehaviors/AttackBehavior_Ixion_HALaserBeam.h"
 #include "Projectile/Projectile.h"
 
 void UAttack_Ixion_HAHomingAndLaser::Start()
 {
-    if (!homingProjectileClass) {
+    if (!homingProjectileClass || !laserClass) {
         Finish();
     }
 
-	GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, this, &UAttack_Ixion_HAHomingAndLaser::FireBullets, bulletsStartTime, true);
+    //FireLaserBeam();
+    GetWorld()->GetTimerManager().SetTimer(laserTimerHandle, this, &UAttack_Ixion_HAHomingAndLaser::FireLaserBeam, .2);
+	GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, this, &UAttack_Ixion_HAHomingAndLaser::FireBullets, bulletsStartTime + laserDuration, true);
 }
 
 void UAttack_Ixion_HAHomingAndLaser::Finish()
 {
     currentWave = 0;
+    GetWorld()->GetTimerManager().ClearTimer(laserTimerHandle);
 
 	AIxionAIController* ixion = Cast<AIxionAIController>(GetOwner());
 	ixion->FinishAttack(false);
+}
+
+void UAttack_Ixion_HAHomingAndLaser::FireLaserBeam()
+{
+    AAttackBehavior_Ixion_HALaserBeam* laserBeam = GetWorld()->SpawnActor<AAttackBehavior_Ixion_HALaserBeam>(laserClass, GetPawn()->GetActorLocation(), FRotator(0, GetPawn()->GetActorRotation().Yaw, 0));
+    if (laserBeam) {
+        laserBeam->SetDuration(laserDuration);
+        laserBeam->SetOwner(GetPawn());
+    }
 }
 
 void UAttack_Ixion_HAHomingAndLaser::FireBullets()

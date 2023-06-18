@@ -20,51 +20,56 @@ public:
 	virtual void Finish() override;
 	
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsStartTime = .8f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsDuration = 5.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	int waves = 6;
-	
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsConeAngle = 110.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsConeAngleVertical = 35;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	int bulletsVertical = 2;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	int bulletsPerSide = 24;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	int bulletsPerWave = 12;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsSpeed = 1400.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsHomingMagnitude = 2200.0f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsMinTimeWave = .03f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsMaxTimeWave = .06f;
+
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
+	float laserDuration = 2.3f;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AProjectile> homingProjectileClass;
 
 	UPROPERTY(EditAnywhere)
-	FRotator test;
+	TSubclassOf<class AAttackBehavior_Ixion_HALaserBeam> laserClass;
 
 
 	int currentWave = 0;
 	FTimerHandle fireRateTimerHandle;
+	FTimerHandle laserTimerHandle;
 
+	void FireLaserBeam();
 	void FireBullets();
 };

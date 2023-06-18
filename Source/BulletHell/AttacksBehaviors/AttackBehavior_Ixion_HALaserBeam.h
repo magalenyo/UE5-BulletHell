@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "AttackBehavior_Ixion_HALaserBeam.generated.h"
 
 UCLASS()
@@ -19,6 +21,8 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+	void SetDuration(float newDuration);
+	void SetOwner(AActor* newOwner);
 
 private:
 
@@ -29,7 +33,7 @@ private:
 	UStaticMeshComponent* mesh;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
-	float duration = 3.0f;
+	float duration = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
 	float damage = 10.f;
@@ -37,18 +41,24 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
 	float hitCooldown = .3f;
 
-	UPROPERTY(EditAnywhere, Category = "Basic Attack: Shockwave")
-	float initialDegree = -180.0f;
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
+	float initialDegree = 180.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Basic Attack: Shockwave")
-	float finalDegree = 110.0f;
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
+	float finalDegree = 270.0f;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* hitEffect;
 
 	float currentTime = 0.0f;
 	APawn* playerPawn = nullptr;
+	AActor* owner = nullptr;
 
 	FRotator initialRotation = FRotator::ZeroRotator;
 	bool alreadyHit = false;
 	FTimerHandle cooldownTimerHandle;
+
+	void Hit();
 
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

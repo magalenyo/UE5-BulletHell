@@ -2,6 +2,8 @@
 
 
 #include "AttacksBehaviors/AttackBehavior_Ixion_HALaserBeam.h"
+#include "Kismet/GameplayStatics.h"
+
 
 AAttackBehavior_Ixion_HALaserBeam::AAttackBehavior_Ixion_HALaserBeam()
 {
@@ -17,9 +19,14 @@ AAttackBehavior_Ixion_HALaserBeam::AAttackBehavior_Ixion_HALaserBeam()
 void AAttackBehavior_Ixion_HALaserBeam::BeginPlay()
 {
 	Super::BeginPlay();
+
+	playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	mesh->OnComponentBeginOverlap.AddDynamic(this, &AAttackBehavior_Ixion_HALaserBeam::OnBeginOverlap);
+
 	
-	initialRotation = GetActorRotation();
-	initialRotation.Pitch = initialDegree;
+	//initialRotation = GetActorRotation();
+	//initialRotation.Pitch = initialDegree;
 
 	SetLifeSpan(duration);
 }
@@ -38,7 +45,6 @@ void AAttackBehavior_Ixion_HALaserBeam::Tick(float DeltaTime)
 		//float CurrentYawRate = FMath::Lerp(CurrentYawRate, RequestedYawRate, DeltaTime * Acceleration);
 	currentTime += DeltaTime;
 	//UE_LOG(LogTemp, Display, TEXT("Alpha %f"), currentTime / duration);
-	UE_LOG(LogTemp, Display, TEXT("Alpha %f .Smooth %f"), currentTime / duration, FMath::SmoothStep(initialDegree, finalDegree, currentTime / duration));
 
 
 	//FRotator rotation = GetActorRotation() + FRotator(FMath::SmoothStep(initialDegree, finalDegree, currentTime / duration), 0, 0);
@@ -56,9 +62,78 @@ void AAttackBehavior_Ixion_HALaserBeam::Tick(float DeltaTime)
 
 	//SetActorRotation(rotation);
 	//AddActorLocalRotation(quatRotation);
-	SetActorRotation(initialRotation.Quaternion() + quatRotation);
+	//SetActorRotation(initialRotation.Quaternion());
+	mesh->SetRelativeRotation(quatRotation);
+	Hit();
+}
+
+void AAttackBehavior_Ixion_HALaserBeam::SetDuration(float newDuration)
+{
+	duration = newDuration;
+	SetLifeSpan(duration);
+}
+
+void AAttackBehavior_Ixion_HALaserBeam::SetOwner(AActor* newOwner)
+{
+	owner = newOwner;
+}
+
+void AAttackBehavior_Ixion_HALaserBeam::Hit()
+{
+	//AController* ownerController = GetOwnerController();
+	//if (!ownerController) return false;
+
+	//FVector location;
+	//FRotator rotation;
+	//shotDirection = -rotation.Vector();		// where it's being shot from
+	
+	FVector end = mesh->GetUpVector() * 10000;
+
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(this);
+	params.AddIgnoredActor(GetOwner());
+	params.AddIgnoredActor(owner);
+
+	FHitResult hit;
+
+	bool isHit = GetWorld()->LineTraceSingleByChannel(
+		hit,
+		GetActorLocation(),
+		end,
+		ECollisionChannel::ECC_WorldStatic,
+		params
+	);
+
+	//DrawDebugLine(GetWorld(), GetActorLocation(), end, FColor::Red, true);
+	DrawDebugLine(GetWorld(), GetActorLocation(), mesh->GetUpVector() * 10000, FColor::Green, true);
+
+	if (!isHit) {
+		return;
+	}
+
+	if (hitEffect) {
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), hitEffect, hit.Location);
+	}
 }
 
 void AAttackBehavior_Ixion_HALaserBeam::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// TODO Delete
+	if (hitEffect) {
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), hitEffect, SweepResult.ImpactPoint);
+	}
+
+	if (OtherActor != playerPawn) {
+		return;
+	}
+
+	if (!alreadyHit) {
+		alreadyHit = true;
+		UE_LOG(LogTemp, Display, TEXT("HIT"));
+
+		GetWorld()->GetTimerManager().SetTimer(cooldownTimerHandle, [this]() {
+			alreadyHit = false;
+			GetWorld()->GetTimerManager().ClearTimer(cooldownTimerHandle);
+			}, hitCooldown, false);
+	}
 }

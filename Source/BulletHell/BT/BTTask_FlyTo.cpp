@@ -58,6 +58,7 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
         {
             characterMovementComponent->BrakingDecelerationFlying = initialBrakingDeceleration;
             characterMovementComponent->MaxFlySpeed = initialSpeed;
+            characterMovementComponent->Velocity = FVector(0, 0, 0);
             FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
         }
     }
