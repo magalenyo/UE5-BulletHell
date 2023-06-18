@@ -13,7 +13,6 @@ void UAttack_Ixion_HAHomingAndLaser::Start()
         Finish();
     }
 
-    //FireLaserBeam();
     GetWorld()->GetTimerManager().SetTimer(laserTimerHandle, this, &UAttack_Ixion_HAHomingAndLaser::FireLaserBeam, .2);
 	GetWorld()->GetTimerManager().SetTimer(fireRateTimerHandle, this, &UAttack_Ixion_HAHomingAndLaser::FireBullets, bulletsStartTime + laserDuration, true);
 }
@@ -48,7 +47,6 @@ void UAttack_Ixion_HAHomingAndLaser::FireBullets()
     for (int i = 0; i < 2; ++i) {
         float sideRotation = i == 0 ? 90 : -90;
         for (int j = 0; j < bulletsPerWave; ++j) {
-            //float randomAngle = FMath::RandRange(-halfRange, halfRange);
             FTransform transform = FTransform(rotation + FRotator(FMath::RandRange(-halfRange, halfRange), sideRotation, 0), location);
 
             AProjectile* projectile = GetWorld()->SpawnActorDeferred<AProjectile>(homingProjectileClass, transform);

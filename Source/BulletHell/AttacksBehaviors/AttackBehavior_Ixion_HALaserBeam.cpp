@@ -35,34 +35,10 @@ void AAttackBehavior_Ixion_HALaserBeam::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//FRotator lerpedRotation = FMath::Lerp(initialDegree, TargetRotation, InterpolationSpeed);
-
-	//FMath::Lerp(FRotator(0, 0, 0), FRotator())
-
-	//SetActorRotation();
-
-	//SetRelativeRotation(FMath::Lerp(FQuat(DoorRotation), FQuat(FRotator(0.0f, RotateValue, 0.0f)), 0.01f));
-		//float CurrentYawRate = FMath::Lerp(CurrentYawRate, RequestedYawRate, DeltaTime * Acceleration);
 	currentTime += DeltaTime;
-	//UE_LOG(LogTemp, Display, TEXT("Alpha %f"), currentTime / duration);
+	FQuat quatRotation = FQuat(FRotator(FMath::InterpEaseInOut(initialDegree, finalDegree, currentTime / duration, easingDegree), 0, 0));
+	//FQuat quatRotation = FQuat(FRotator(FMath::Lerp(initialDegree, finalDegree, currentTime / duration), 0, 0));
 
-
-	//FRotator rotation = GetActorRotation() + FRotator(FMath::SmoothStep(initialDegree, finalDegree, currentTime / duration), 0, 0);
-	//FRotator rotation = GetActorRotation() + FRotator(-180 + FMath::SmoothStep(0.0f, 290.0f, currentTime / duration), 0, 0);
-	//FRotator rotation = GetActorRotation() + FRotator(FMath::Lerp(initialDegree, finalDegree, FMath::SmoothStep(0.0f, 1.0f, currentTime / duration)), 0, 0);
-
-	//FRotator rotation = GetActorRotation() + FRotator(FMath::InterpEaseInOut(initialDegree, finalDegree, currentTime / duration, 4), 0, 0);
-	//FRotator rotation = GetActorRotation() + FRotator(FMath::Lerp(initialDegree, finalDegree, currentTime / duration), 0, 0);
-	//rotation.Pitch += FMath::Lerp(initialDegree, finalDegree, currentTime / duration);
-
-	//FQuat quatRotation = FQuat(FRotator(FMath::Lerp(initialDegree, finalDegree, currentTime / duration), 0 ,0));
-	FQuat quatRotation = FQuat(FRotator(FMath::InterpEaseInOut(initialDegree, finalDegree, currentTime / duration, 8), 0, 0));
-	//UE_LOG(LogTemp, Display, TEXT("Rotation: %s"), *rotation.ToString());
-
-
-	//SetActorRotation(rotation);
-	//AddActorLocalRotation(quatRotation);
-	//SetActorRotation(initialRotation.Quaternion());
 	mesh->SetRelativeRotation(quatRotation);
 	Hit();
 }
@@ -80,13 +56,6 @@ void AAttackBehavior_Ixion_HALaserBeam::SetOwner(AActor* newOwner)
 
 void AAttackBehavior_Ixion_HALaserBeam::Hit()
 {
-	//AController* ownerController = GetOwnerController();
-	//if (!ownerController) return false;
-
-	//FVector location;
-	//FRotator rotation;
-	//shotDirection = -rotation.Vector();		// where it's being shot from
-	
 	FVector end = mesh->GetUpVector() * 10000;
 
 	FCollisionQueryParams params;
@@ -103,9 +72,6 @@ void AAttackBehavior_Ixion_HALaserBeam::Hit()
 		ECollisionChannel::ECC_WorldStatic,
 		params
 	);
-
-	//DrawDebugLine(GetWorld(), GetActorLocation(), end, FColor::Red, true);
-	DrawDebugLine(GetWorld(), GetActorLocation(), mesh->GetUpVector() * 10000, FColor::Green, true);
 
 	if (!isHit) {
 		return;

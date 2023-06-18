@@ -33,7 +33,10 @@ private:
 	UStaticMeshComponent* mesh;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
-	float duration = 2.0f;
+	float duration = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
+	float easingDegree = 6.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
 	float damage = 10.f;
@@ -42,7 +45,7 @@ private:
 	float hitCooldown = .3f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
-	float initialDegree = 180.0f;
+	float initialDegree = 200.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Basic Attack: Laser Beam")
 	float finalDegree = 270.0f;

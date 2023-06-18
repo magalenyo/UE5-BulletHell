@@ -57,7 +57,7 @@ private:
 	float bulletsMaxTimeWave = .06f;
 
 	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
-	float laserDuration = 2.3f;
+	float laserDuration = 1.0f;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AProjectile> homingProjectileClass;
