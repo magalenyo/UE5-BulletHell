@@ -81,6 +81,9 @@ private:
 	// UPROPERTY(EditAnywhere, Category="Heavy Attack: ShockwaveBullets - Bullets")
 	// TSubclassOf<class AAttackBehavior_Ixion_BAShockwave> shockwaveClass;
 
+	UPROPERTY(EditAnywhere, Category="Sequencer")
+	class ULevelSequence* startSequence;
+
 	const USceneComponent* projectileSpawnPointTop;
 	const USceneComponent* projectileSpawnPointBottom;
 
@@ -94,4 +97,6 @@ private:
 	void FireBulletsWave();
 	void FireBulletsSubwave();
 	void FireBurst();
+	void StartInitialSequence();
+	void StartFinalSequence();
 };

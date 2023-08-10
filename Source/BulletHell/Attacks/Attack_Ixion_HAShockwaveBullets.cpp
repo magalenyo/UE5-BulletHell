@@ -8,6 +8,9 @@
 #include "IxionAIController.h"
 #include "ShooterCharacter.h"
 #include "IxionCharacter.h"
+#include "MovieSceneSequencePlayer.h"
+#include "LevelSequence.h"
+#include "LevelSequencePlayer.h"
 
 void UAttack_Ixion_HAShockwaveBullets::Start()
 {
@@ -16,6 +19,8 @@ void UAttack_Ixion_HAShockwaveBullets::Start()
         Finish();
         return;
     }
+
+    StartInitialSequence();
 
     projectileSpawnPointTop = character->GetProjectileSpawnPointTop();
     projectileSpawnPointBottom = character->GetProjectileSpawnPointBottom();
@@ -28,6 +33,8 @@ void UAttack_Ixion_HAShockwaveBullets::Start()
 
 void UAttack_Ixion_HAShockwaveBullets::Finish()
 {
+    StartFinalSequence();
+
     GetWorld()->GetTimerManager().ClearTimer(attackTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(shockwaveFireRateTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(bulletsFireRateTimerHandle);
@@ -160,6 +167,38 @@ void UAttack_Ixion_HAShockwaveBullets::FireBurst()
             if (burstDecelerationCurve) {
                 projectile->SetDecelerationCurve(burstDecelerationCurve);
             }
+        }
+    }
+}
+
+void UAttack_Ixion_HAShockwaveBullets::StartInitialSequence()
+{
+    //ULevelSequence* Sequence = LoadObject<ULevelSequence>(nullptr, TEXT("YourSequencePath"));
+
+    if (startSequence)
+    {
+        ALevelSequenceActor* OutActor = nullptr;
+        ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), startSequence, FMovieSceneSequencePlaybackSettings(), OutActor);
+
+        if (SequencePlayer)
+        {
+            //SequencePlayer->OnFinished.AddDynamic(this, &AYourClass::OnSequenceFinished);
+            SequencePlayer->Play();
+        }
+    }
+}
+
+void UAttack_Ixion_HAShockwaveBullets::StartFinalSequence()
+{
+    if (startSequence)
+    {
+        ALevelSequenceActor* OutActor = nullptr;
+        ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), startSequence, FMovieSceneSequencePlaybackSettings(), OutActor);
+
+        if (SequencePlayer)
+        {
+            //SequencePlayer->OnFinished.AddDynamic(this, &AYourClass::OnSequenceFinished);
+            SequencePlayer->PlayReverse();
         }
     }
 }
