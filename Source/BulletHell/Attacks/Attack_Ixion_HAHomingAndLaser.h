@@ -48,7 +48,7 @@ private:
 	float bulletsSpeed = 1400.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
-	float bulletsHomingMagnitude = 2200.0f;
+	float bulletsHomingMagnitude = 3000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Heavy Attack: HomingAndLaser - Bullets")
 	float bulletsMinTimeWave = .03f;
