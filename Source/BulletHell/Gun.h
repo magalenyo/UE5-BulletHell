@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
 #include "Gun.generated.h"
 
 UCLASS()
@@ -50,7 +51,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float damage = 10;
 
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* traceEffect;
+
 	bool GunTrace(FHitResult &hit, FVector& shotDirection);
 
 	AController* GetOwnerController() const;
+
+	void SpawnTrace(FVector endPosition);
 };

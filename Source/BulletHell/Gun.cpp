@@ -5,6 +5,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraFunctionLibrary.h"
+
 
 // Sets default values
 AGun::AGun()
@@ -90,17 +92,23 @@ bool AGun::GunTrace(FHitResult &hit, FVector& shotDirection)
 	shotDirection = -rotation.Vector();		// where it's being shot from
 	FVector end = location + rotation.Vector() * maxRange;
 
+
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(this);
 	params.AddIgnoredActor(GetOwner());
 
-	return GetWorld()->LineTraceSingleByChannel(
+	bool hasHit = GetWorld()->LineTraceSingleByChannel(
 		hit,
 		location,
 		end,
 		ECollisionChannel::ECC_GameTraceChannel1,
 		params
 	);
+
+	SpawnTrace(rotation.Vector() * maxRange);
+	
+	return hasHit;
+
 }
 
 AController* AGun::GetOwnerController() const
@@ -108,5 +116,15 @@ AController* AGun::GetOwnerController() const
 	APawn* ownerPawn = Cast<APawn>(GetOwner());
 	if (!ownerPawn) return nullptr;
 	return ownerPawn->GetController();
+}
+
+void AGun::SpawnTrace(FVector endPosition)
+{
+	FTransform socketTransform = mesh->GetSocketTransform(TEXT("MuzzleFlashSocket"));
+
+	if (traceEffect) {
+		UNiagaraComponent* trace = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), traceEffect, socketTransform.GetLocation());
+		trace->SetVectorParameter("BeamEnd", endPosition);
+	}
 }
 
