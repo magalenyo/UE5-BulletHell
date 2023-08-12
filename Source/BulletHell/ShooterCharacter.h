@@ -47,7 +47,7 @@ protected:
 	AGun* gun;
 
 	UPROPERTY(EditAnywhere)
-	float movementSpeed = 100;
+	float movementSpeed = 600;
 
 	UPROPERTY(EditDefaultsOnly)
 	float maxHealth = 100;

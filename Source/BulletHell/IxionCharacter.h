@@ -19,6 +19,8 @@ public:
 
 	const USceneComponent* GetProjectileSpawnPointTop() const;
 	const USceneComponent* GetProjectileSpawnPointBottom() const;
+	void StartTrail() const;
+	void StopTrail() const;
 	
 protected:
 	UPROPERTY(EditAnywhere)
@@ -27,9 +29,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* projectileSpawnPointBottomPhase2;
 
+	virtual void BeginPlay() override;
+
 	virtual void HandleDeath();
 
 private:
+	class UNiagaraComponent* trailComponent;
 
 	int phase = 1;
 

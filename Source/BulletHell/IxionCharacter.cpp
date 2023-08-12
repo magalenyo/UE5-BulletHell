@@ -3,6 +3,8 @@
 
 #include "IxionCharacter.h"
 #include "IxionAIController.h"
+#include "NiagaraComponent.h"
+
 
 AIxionCharacter::AIxionCharacter()
 {
@@ -15,6 +17,13 @@ AIxionCharacter::AIxionCharacter()
 	projectileSpawnPointBottomPhase2->SetupAttachment(GetMesh());
 }
 
+void AIxionCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    trailComponent = Cast<UNiagaraComponent>(GetDefaultSubobjectByName(TEXT("Trail")));
+}
+
 const USceneComponent* AIxionCharacter::GetProjectileSpawnPointTop() const
 {
     return projectileSpawnPointTopPhase2;
@@ -24,6 +33,21 @@ const USceneComponent* AIxionCharacter::GetProjectileSpawnPointBottom() const
 {
     return projectileSpawnPointBottomPhase2;
 }
+
+void AIxionCharacter::StartTrail() const
+{
+    if (trailComponent) {
+        trailComponent->Activate();
+    }
+}
+
+void AIxionCharacter::StopTrail() const
+{
+    if (trailComponent) {
+        trailComponent->Deactivate();
+    }
+}
+
 
 void AIxionCharacter::HandleDeath()
 {

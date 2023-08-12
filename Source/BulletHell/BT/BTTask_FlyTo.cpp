@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "IxionAIController.h"
+#include "IxionCharacter.h"
 
 
 UBTTask_FlyTo::UBTTask_FlyTo()
@@ -28,6 +30,8 @@ EBTNodeResult::Type UBTTask_FlyTo::ExecuteTask(UBehaviorTreeComponent& OwnerComp
     characterMovementComponent->BrakingDecelerationFlying = maxBrakingDeceleration;
     initialSpeed = characterMovementComponent->MaxFlySpeed;
     characterMovementComponent->MaxFlySpeed = speed;
+
+    StartTrail(OwnerComp);
 
     return EBTNodeResult::InProgress;
 }
@@ -56,6 +60,7 @@ void UBTTask_FlyTo::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemor
         float distanceToPosition = FVector::Distance(pawnLocation, destination);
         if (distanceToPosition <= acceptanceRadius)
         {
+            StopTrail(OwnerComp);
             characterMovementComponent->BrakingDecelerationFlying = initialBrakingDeceleration;
             characterMovementComponent->MaxFlySpeed = initialSpeed;
             characterMovementComponent->Velocity = FVector(0, 0, 0);
@@ -84,5 +89,39 @@ UCharacterMovementComponent* UBTTask_FlyTo::GetCharacterMovement(const UBehavior
     }
 
     return pawn->FindComponentByClass<UCharacterMovementComponent>();
+}
+
+void UBTTask_FlyTo::StartTrail(const UBehaviorTreeComponent& OwnerComp) const
+{
+    AIxionAIController* character = Cast<AIxionAIController>(OwnerComp.GetAIOwner());
+    if (!character) {
+        return;
+    }
+
+    AIxionCharacter* pawn = Cast<AIxionCharacter>(character->GetPawn());
+    if (!pawn) {
+        return;
+    }
+
+    if (pawn) {
+        pawn->StartTrail();
+    }
+}
+
+void UBTTask_FlyTo::StopTrail(const UBehaviorTreeComponent& OwnerComp) const
+{
+    AIxionAIController* character = Cast<AIxionAIController>(OwnerComp.GetAIOwner());
+    if (!character) {
+        return;
+    }
+
+    AIxionCharacter* pawn = Cast<AIxionCharacter>(character->GetPawn());
+    if (!pawn) {
+        return;
+    }
+
+    if (pawn) {
+        pawn->StopTrail();
+    }
 }
 

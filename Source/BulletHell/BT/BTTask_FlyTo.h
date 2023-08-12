@@ -39,4 +39,7 @@ private:
     FVector GetDestination(const UBehaviorTreeComponent& OwnerComp) const;
 
     UCharacterMovementComponent* GetCharacterMovement(const UBehaviorTreeComponent& OwnerComp) const;
+
+    void StartTrail(const UBehaviorTreeComponent& OwnerComp) const;
+    void StopTrail(const UBehaviorTreeComponent& OwnerComp) const;
 };
