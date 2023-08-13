@@ -69,6 +69,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Shockwave")
 	float shockwaveMovementSpeed = 650.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Camera Shake")
+	TSubclassOf<class UCameraShakeBase> cameraShake;
+
+	UPROPERTY(EditAnywhere, Category = "Heavy Attack: Sound")
+	class USoundCue* descendCue;
+
 	AActor* spline;
 
 	class UComponentFollowSpline* followSplineComponent;
@@ -84,6 +90,7 @@ private:
 
 	void FireVortex();
 	void FireShockwaves();
-
 	void RepositionVortexProjectiles();
+	void PlayCameraShake();
+	void PlayDescendAudio();
 };

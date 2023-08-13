@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectile/Projectile.h"
 #include "AttacksBehaviors/AttackBehavior_Ixion_BAShockwave.h"
+#include "Sound/SoundCue.h"
 
 void UAttack_Ixion_HADescendRush::Start()
 {
@@ -40,6 +41,7 @@ void UAttack_Ixion_HADescendRush::Start()
     followSplineComponent->AddEvent(attackPoint * duration, onPerformAttack);
     projectilesVortex.resize(startPointsPerWaveVortex * wavesPerPointVortex);
 
+    PlayDescendAudio();
 }
 
 void UAttack_Ixion_HADescendRush::Finish()
@@ -68,6 +70,7 @@ void UAttack_Ixion_HADescendRush::OnPerformAttack()
     targetLocation = targetMesh->GetComponentLocation();
     targetLocation.Z = fireLocation.Z;
     
+    PlayCameraShake();
     FireVortex();
     FireShockwaves();
 }
@@ -172,4 +175,33 @@ void UAttack_Ixion_HADescendRush::RepositionVortexProjectiles()
 
     GetWorld()->GetTimerManager().ClearTimer(retargetWaveVortexTimerHandle);
     GetWorld()->GetTimerManager().SetTimer(retargetWaveVortexTimerHandle, this, &UAttack_Ixion_HADescendRush::RepositionVortexProjectiles, timeToReposition, false);
+}
+
+void UAttack_Ixion_HADescendRush::PlayCameraShake()
+{
+    if (!cameraShake) {
+        return;
+    }
+
+    APawn* playerPawn = GetOwner()->GetPlayerPawn();
+    if (!playerPawn) {
+        return;
+    }
+
+    UGameplayStatics::PlayWorldCameraShake(
+        GetWorld(),
+        cameraShake,
+        playerPawn->GetActorLocation(),
+        0,
+        2000
+    );
+}
+
+void UAttack_Ixion_HADescendRush::PlayDescendAudio()
+{
+    if (!descendCue) {
+        return;
+    }
+
+    UGameplayStatics::SpawnSoundAttached(descendCue, GetOwner()->GetPawn()->GetRootComponent());
 }
