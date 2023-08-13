@@ -22,8 +22,11 @@ protected:
 	
 private:
 	UPROPERTY(EditAnywhere)
-	float radius = 4.0f;
+	float radius = 2000.0f;
 
 	UPROPERTY(EditAnywhere)
 	FVector offset = FVector::ZeroVector;
+
+	int maximumTries = 10;
+	float minimumDistance = 1500.0f;
 };
