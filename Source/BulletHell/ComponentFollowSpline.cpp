@@ -89,7 +89,6 @@ void UComponentFollowSpline::OnAccelerationTimelineUpdate(float Alpha)
 
 void UComponentFollowSpline::OnAccelerationTimelineFinished()
 {
-	UE_LOG(LogTemp, Display, TEXT("Your FINISHED"));
 	onSplineFinishedDelegate.ExecuteIfBound();
 	timeline->DestroyComponent();
 	accelerationCurve = nullptr;
