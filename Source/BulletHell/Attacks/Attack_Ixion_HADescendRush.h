@@ -93,4 +93,6 @@ private:
 	void RepositionVortexProjectiles();
 	void PlayCameraShake();
 	void PlayDescendAudio();
+	void StartTrail() const;
+	void StopTrail() const;
 };

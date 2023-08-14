@@ -10,6 +10,7 @@
 #include "Projectile/Projectile.h"
 #include "AttacksBehaviors/AttackBehavior_Ixion_BAShockwave.h"
 #include "Sound/SoundCue.h"
+#include "IxionCharacter.h"
 
 void UAttack_Ixion_HADescendRush::Start()
 {
@@ -42,6 +43,7 @@ void UAttack_Ixion_HADescendRush::Start()
     projectilesVortex.resize(startPointsPerWaveVortex * wavesPerPointVortex);
 
     PlayDescendAudio();
+    StartTrail();
 }
 
 void UAttack_Ixion_HADescendRush::Finish()
@@ -55,6 +57,7 @@ void UAttack_Ixion_HADescendRush::Finish()
         spline->Destroy();
     }
 
+    StopTrail();
     AIxionAIController* ixion = Cast<AIxionAIController>(GetOwner());
     ixion->FinishAttack(false);
 }
@@ -204,4 +207,24 @@ void UAttack_Ixion_HADescendRush::PlayDescendAudio()
     }
 
     UGameplayStatics::SpawnSoundAttached(descendCue, GetOwner()->GetPawn()->GetRootComponent());
+}
+
+void UAttack_Ixion_HADescendRush::StartTrail() const
+{
+    AIxionCharacter* pawn = Cast<AIxionCharacter>(GetPawn());
+    if (!pawn) {
+        return;
+    }
+
+    pawn->StartTrail();
+}
+
+void UAttack_Ixion_HADescendRush::StopTrail() const
+{
+    AIxionCharacter* pawn = Cast<AIxionCharacter>(GetPawn());
+    if (!pawn) {
+        return;
+    }
+
+    pawn->StopTrail();
 }
