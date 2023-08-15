@@ -35,7 +35,7 @@ public:
 	void SetHoming(AActor* target);
 	void SetHoming(AActor* target, float newHomingMagnitude);
 	void SetHomingMagnitude(float newHomingMagnitude);
-	void SetDelayedActivation(float delay);
+	void SetDelayedActivation(float delay);		// DO NOT USE
 
 private:
 
