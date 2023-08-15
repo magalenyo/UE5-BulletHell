@@ -55,7 +55,7 @@ void UAttack_Ixion_BAMachineGun::BAMachineGun()
     {
         UGameplayStatics::FinishSpawningActor(projectile, transform);
         
-        projectile->SetPredictionSpeed(randomTargetPosition, playerPawn->GetVelocity());
+        projectile->SetPredictionSpeed(randomTargetPosition, playerPawn->GetVelocity(), predictionSpeedMitigationFactorMachineGun);
         projectile->SetOwner(GetOwner());
     }
 

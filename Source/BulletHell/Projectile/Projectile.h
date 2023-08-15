@@ -25,7 +25,9 @@ public:
 
 	const float GetProjectileSpeed() const;
 
+	void SetPredictionSpeedMitigationFactor(float newPredictionSpeedMitigationFactor);
 	void SetPredictionSpeed(FVector targetLocation, FVector targetVelocity);
+	void SetPredictionSpeed(FVector targetLocation, FVector targetVelocity, float newPredictionSpeedMitigationFactor);
 	void SetSpeed(float newSpeed);
 	void SetDecelerationCurve(UCurveFloat* decelerationCurve);
 	void SetVelocity(FVector direction);		// Direction should be without applying speed

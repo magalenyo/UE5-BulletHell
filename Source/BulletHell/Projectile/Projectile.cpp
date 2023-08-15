@@ -39,6 +39,11 @@ const float AProjectile::GetProjectileSpeed() const
 	return speed;
 }
 
+void AProjectile::SetPredictionSpeedMitigationFactor(float newPredictionSpeedMitigationFactor)
+{
+    predictionSpeedMitigationFactor = newPredictionSpeedMitigationFactor;
+}
+
 void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVelocity)
 {
     if (!projectileMovementComponent)
@@ -75,6 +80,12 @@ void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVeloc
         projectileMovementComponent->Velocity = LaunchVelocity;
         projectileMovementComponent->Activate();
     }
+}
+
+void AProjectile::SetPredictionSpeed(FVector targetLocation, FVector targetVelocity, float newPredictionSpeedMitigationFactor)
+{
+    SetPredictionSpeedMitigationFactor(newPredictionSpeedMitigationFactor);
+    SetPredictionSpeed(targetLocation, targetVelocity);
 }
 
 void AProjectile::SetSpeed(float newSpeed)

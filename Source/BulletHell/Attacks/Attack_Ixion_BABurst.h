@@ -21,19 +21,19 @@ public:
 	
 private:
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	int bulletsPerWaveBurstAttack = 4;
+	int bulletsPerWaveBurstAttack = 5;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	int wavesBurstAttack = 6;
+	int wavesBurstAttack = 8;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
 	float durationBurstAttack = .3f;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float angleBurstAttack = 40.0f;
+	float angleBurstAttack = 30.0f;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
-	float speedBurstAttack = 1000.0f;
+	float speedBurstAttack = 1200.0f;
 
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Burst")
 	float delayToHomeBurstAttack = .5f;

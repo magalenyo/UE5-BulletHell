@@ -35,6 +35,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Basic Attack: Machine Gun")
 	float nextAttackMaxTimeMachineGun = .06f;
 
+	UPROPERTY(EditAnywhere, Category = "Basic Attack: Machine Gun")
+	float predictionSpeedMitigationFactorMachineGun = .9f;
+
 private:
 
 	FTimerHandle fireRateTimerHandle;
