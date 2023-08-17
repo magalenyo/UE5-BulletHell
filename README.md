@@ -17,8 +17,9 @@ Burst attack (Basic Attack): shoots towards the player in a cone.
 Vortex attack (Heavy Attack): it shoots a cone of bullets towards the player, making a beautiful pattern.
 The exit attack will always be performed before it moves to a different location.
 
-Full video: [https://www.youtube.com/watch?v=TG0Axq1YqVo](https://youtu.be/GBGyvQ0MmYU)
+More information can be found at: https://miguelangelbuenorivera.com/projects/returnal-unreal-engine
 
+Full video: [https://www.youtube.com/watch?v=TG0Axq1YqVo](https://youtu.be/GBGyvQ0MmYU)
 
 Short video:
 
