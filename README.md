@@ -17,9 +17,10 @@ Burst attack (Basic Attack): shoots towards the player in a cone.
 Vortex attack (Heavy Attack): it shoots a cone of bullets towards the player, making a beautiful pattern.
 The exit attack will always be performed before it moves to a different location.
 
-Full video: https://www.youtube.com/watch?v=TG0Axq1YqVo
+Full video: [https://www.youtube.com/watch?v=TG0Axq1YqVo](https://youtu.be/GBGyvQ0MmYU)
 
 
 Short video:
 
-![ezgif-5-1d33715c98](https://user-images.githubusercontent.com/27434068/231311653-644a78c2-0314-4a44-b16b-2a60acce5d71.gif)
+https://github.com/magalenyo/UE5-BulletHell/assets/27434068/f43d425f-554b-4f13-8c33-f20afa5d899a
+
